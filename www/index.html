@@ -5,68 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Meteorawa</title>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
-    
     <style>
-        :root {
-            --bg-color: #121212; --text-color: #ffffff; --text-muted: #888888;
-            --card-bg: rgba(255, 255, 255, 0.05); --card-border: rgba(255, 255, 255, 0.1);
-            --icon-color: #cccccc; --green: #00ff00; --red: #ff3333;
-            --bg-image: none; --card-radius: 32px;
-            --forecast-bg: rgba(0, 0, 0, 0.4);
-        }
-        body.light-theme {
-            --bg-color: #f5f5f5; --text-color: #000000; --text-muted: #666666;
-            --card-bg: rgba(255, 255, 255, 0.7); --card-border: rgba(0, 0, 0, 0.08);
-            --icon-color: #333333; --green: #008800; --bg-image: none; --card-radius: 32px;
-            --forecast-bg: rgba(255, 255, 255, 0.6);
-        }
-        body.pencil-theme {
-            --bg-color: #fcfbf7; --text-color: #2c2c2c; --text-muted: #6a6a6a;
-            --card-bg: transparent; --card-border: #4a4a4a;
-            --icon-color: #2c2c2c; --green: #4a7c59;
-            --card-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-            --forecast-bg: rgba(252, 251, 247, 0.95);
-            --bg-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
-            font-family: 'Caveat', 'Comic Sans MS', cursive; 
-        }
+        :root { --bg-color: #121212; --text-color: #ffffff; --text-muted: #888888; --card-bg: rgba(255, 255, 255, 0.05); --card-border: rgba(255, 255, 255, 0.1); --icon-color: #cccccc; --green: #00ff00; --red: #ff3333; --bg-image: none; --card-radius: 32px; --forecast-bg: rgba(0, 0, 0, 0.4); }
+        body.light-theme { --bg-color: #f5f5f5; --text-color: #000000; --text-muted: #666666; --card-bg: rgba(255, 255, 255, 0.7); --card-border: rgba(0, 0, 0, 0.08); --icon-color: #333333; --green: #008800; --bg-image: none; --card-radius: 32px; --forecast-bg: rgba(255, 255, 255, 0.6); }
+        body.pencil-theme { --bg-color: #fcfbf7; --text-color: #2c2c2c; --text-muted: #6a6a6a; --card-bg: transparent; --card-border: #4a4a4a; --icon-color: #2c2c2c; --green: #4a7c59; --card-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; --forecast-bg: rgba(252, 251, 247, 0.95); --bg-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"); font-family: 'Caveat', 'Comic Sans MS', cursive; }
         body.pencil-theme * { font-family: 'Caveat', 'Comic Sans MS', cursive !important; }
         body.pencil-theme .weather-icon, body.pencil-theme .fc-icon, body.pencil-theme .hourly-icon { filter: grayscale(100%) contrast(150%) sepia(10%); text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
         body.pencil-theme .status-dot { background-color: var(--green); box-shadow: 1px 1px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(255,255,255,0.5); border: 1px solid var(--text-color); }
         body.pencil-theme .status-dot.yellow { background-color: #d4a373; border-color: #b5835a; }
         body.pencil-theme .status-dot.red { background-color: #a44a3f; border-color: #7a2e2e; }
-
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { 
-            background-color: var(--bg-color); background-image: var(--bg-image); background-attachment: fixed; 
-            color: var(--text-color); transition: all 0.3s; height: 100vh; overflow: hidden; 
-            display: flex; flex-direction: column; 
-            padding-top: env(safe-area-inset-top);
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-        
+        body { background-color: var(--bg-color); background-image: var(--bg-image); background-attachment: fixed; color: var(--text-color); transition: all 0.3s; height: 100vh; overflow: hidden; display: flex; flex-direction: column; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
         .header { display: flex; align-items: center; padding: 20px; position: absolute; top: 0; width: 100%; z-index: 10; padding-top: max(20px, env(safe-area-inset-top)); }
         .logo { font-size: 32px; font-weight: bold; color: var(--green); margin-right: 10px; letter-spacing: 1px; }
-        body.pencil-theme .logo { text-shadow: 1px 1px 1px rgba(0,0,0,0.2); font-size: 36px;}
+        body.pencil-theme .logo { text-shadow: 1px 1px 1px rgba(0,0,0,0.2); font-size: 36px; }
         .status-dot { width: 10px; height: 10px; border-radius: 50%; background-color: var(--green); box-shadow: 0 0 10px var(--green); transition: all 0.3s; }
         .status-dot.yellow { background-color: #ffcc00; box-shadow: 0 0 10px #ffcc00; }
         .status-dot.red { background-color: var(--red); box-shadow: 0 0 10px var(--red); }
-        
         .header-actions { margin-left: auto; display: flex; gap: 10px; }
         .icon-btn { width: 45px; height: 45px; border-radius: 50%; background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--card-border); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s; font-size: 20px; color: var(--icon-color); user-select: none; }
         .icon-btn:active { background: rgba(128, 128, 128, 0.2); }
         body.pencil-theme .icon-btn { border: 2px solid var(--card-border); border-radius: 48% 52% 45% 55% / 55% 45% 52% 48%; box-shadow: 2px 2px 0px rgba(0,0,0,0.15); background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px); }
-
         .main-content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; padding-top: 80px; overflow-y: auto; }
         .weather-card { background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid var(--card-border); border-radius: var(--card-radius); padding: 30px 40px; width: 100%; max-width: 350px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); text-align: center; transition: all 0.3s ease; position: relative; }
         body.pencil-theme .weather-card { border: 2px solid var(--card-border); box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.15), -1px -1px 0px rgba(0,0,0,0.05); background-image: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px), repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(0,0,0,0.02) 5px, rgba(0,0,0,0.02) 6px); }
         body.pencil-theme .weather-card::after { content: ''; position: absolute; top: 4px; left: -4px; right: -3px; bottom: -5px; border: 1px solid var(--card-border); border-radius: 15px 255px 15px 225px / 225px 15px 255px 15px; opacity: 0.6; pointer-events: none; transform: rotate(0.5deg); }
-
         .card-loc-btn, .card-help-btn { position: absolute; top: 15px; width: 35px; height: 35px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--card-border); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s; color: var(--icon-color); z-index: 5; }
         .card-loc-btn { right: 15px; font-size: 16px; }
         .card-help-btn { left: 15px; font-size: 18px; font-weight: bold; }
         .card-loc-btn:active, .card-help-btn:active { background: rgba(128, 128, 128, 0.3); }
         body.pencil-theme .card-loc-btn, body.pencil-theme .card-help-btn { border: 2px dashed var(--card-border); background: transparent; border-radius: 50% 45% 55% 48% / 45% 50% 48% 55%; box-shadow: 1px 1px 0px rgba(0,0,0,0.1); }
-
         .location { font-size: 14px; text-transform: capitalize; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 20px; }
         body.pencil-theme .location { font-size: 24px; font-weight: bold; letter-spacing: 0; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); }
         .temperature { font-size: 96px; font-weight: 700; line-height: 1; margin-bottom: 5px; color: var(--text-color); }
@@ -80,18 +48,15 @@
         .detail-item span { display: block; color: var(--text-color); font-weight: bold; font-size: 16px; margin-top: 5px; }
         body.pencil-theme .detail-item span { font-size: 26px; }
         .retry-btn { display: none; margin: 15px auto 0; background: var(--red); color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
-        
         .forecast-panel { background: var(--forecast-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--card-border); padding: 15px 0; width: 100%; flex-shrink: 0; transition: background 0.3s; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
         body.pencil-theme .forecast-panel { border-top: 2px dashed var(--card-border); }
         .forecast-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; padding: 0 20px 10px 20px; font-weight: bold; }
         body.pencil-theme .forecast-title { font-size: 20px; letter-spacing: 0; text-transform: none; }
         .forecast-scroll { display: flex; overflow-x: auto; gap: 12px; padding: 0 20px 10px 20px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
         .forecast-scroll::-webkit-scrollbar { display: none; }
-        
         .forecast-item { flex: 0 0 auto; width: 75px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 12px 0; text-align: center; scroll-snap-align: start; transition: transform 0.1s; cursor: pointer; position: relative; }
         body.pencil-theme .forecast-item { border: 1.5px solid var(--card-border); border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px; box-shadow: 2px 2px 0px rgba(0,0,0,0.1); background: transparent; background-image: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px); }
         body.pencil-theme .forecast-item::after { content: ''; position: absolute; top: -1px; left: 1px; right: -2px; bottom: 1px; border: 1px solid var(--card-border); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; opacity: 0.5; pointer-events: none; transform: rotate(-0.5deg); }
-        
         .fc-day { font-size: 12px; color: var(--text-muted); text-transform: capitalize; margin-bottom: 2px; }
         body.pencil-theme .fc-day { font-size: 18px; }
         .fc-date { font-size: 14px; font-weight: bold; margin-bottom: 6px; }
@@ -100,7 +65,6 @@
         body.pencil-theme .fc-icon { font-size: 30px; }
         .fc-temp { font-size: 16px; font-weight: bold; }
         body.pencil-theme .fc-temp { font-size: 22px; }
-
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(5px); opacity: 0; transition: opacity 0.3s; }
         .modal-overlay.active { display: flex; opacity: 1; }
         .settings-card { background-color: var(--bg-color); background-image: var(--bg-image); border: 1px solid var(--card-border); border-radius: 24px; width: 90%; max-width: 400px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 15px; position: relative; max-height: 85vh; overflow-y: auto; }
@@ -108,10 +72,8 @@
         .card-header { display: flex; justify-content: space-between; align-items: center; }
         .card-header h2 { font-size: 20px; color: var(--text-color); }
         body.pencil-theme .card-header h2 { font-size: 28px; }
-        
         .close-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-color); width: 30px; height: 30px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
         body.pencil-theme .close-btn { border-radius: 10px 100px 10px 100px / 100px 10px 100px 10px; border-width: 2px; }
-        
         .search-input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-color); font-size: 16px; outline: none; }
         body.pencil-theme .search-input { font-size: 24px; border-width: 2px; border-radius: 5px 20px 5px 20px / 20px 5px 20px 5px; background: transparent; }
         .search-results { display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; padding-right: 5px; }
@@ -119,18 +81,15 @@
         body.pencil-theme .search-result-item { font-size: 22px; border-width: 1.5px; border-radius: 10px 100px 10px 100px / 100px 10px 100px 10px; }
         .search-result-item .country { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
         body.pencil-theme .search-result-item .country { font-size: 18px; }
-
-        .save-btn { background-color: var(--red); color: white; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.3s; flex-shrink: 0;}
+        .save-btn { background-color: var(--red); color: white; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.3s; flex-shrink: 0; }
         .save-btn.active { opacity: 1; pointer-events: auto; }
         body.pencil-theme .save-btn { font-size: 22px; background: #a44a3f; border-radius: 5px 15px 5px 15px; border: 1px solid #7a2e2e; }
-        
         .theme-toggle-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-color); padding: 15px; border-radius: 12px; text-align: left; cursor: pointer; width: 100%; display: flex; flex-direction: column; }
         body.pencil-theme .theme-toggle-btn { border-width: 2px; border-radius: 5px 20px 5px 20px / 20px 5px 20px 5px; }
         .theme-toggle-btn .title { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
         body.pencil-theme .theme-toggle-btn .title { font-size: 24px; }
         .theme-toggle-btn .subtitle { font-size: 12px; color: var(--text-muted); }
         body.pencil-theme .theme-toggle-btn .subtitle { font-size: 18px; }
-        
         .theme-list { display: none; flex-direction: column; gap: 10px; margin-top: 10px; }
         .theme-list.active { display: flex; }
         .theme-item { background: var(--card-bg); padding: 15px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid transparent; }
@@ -144,7 +103,6 @@
         .theme-item.selected .check { visibility: visible; }
         .loading-text { text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 10px; }
         body.pencil-theme .loading-text { font-size: 22px; }
-
         .detail-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
         .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--card-bg); border-radius: 10px; border: 1px solid var(--card-border); }
         body.pencil-theme .detail-row { border-width: 1.5px; font-size: 22px; border-style: dashed; }
@@ -152,7 +110,6 @@
         body.pencil-theme .detail-row span { font-size: 20px; }
         .detail-row b { color: var(--text-color); font-size: 16px; }
         body.pencil-theme .detail-row b { font-size: 24px; }
-
         .hourly-scroll { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 5px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
         .hourly-scroll::-webkit-scrollbar { display: none; }
         .hourly-item { flex: 0 0 auto; width: 60px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 8px 0; text-align: center; }
@@ -162,7 +119,6 @@
         .hourly-icon { font-size: 18px; margin-bottom: 4px; }
         .hourly-temp { font-size: 13px; font-weight: bold; }
         body.pencil-theme .hourly-temp { font-size: 20px; }
-
         .feedback-btn { flex: 1; padding: 12px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; transition: transform 0.1s; }
         .feedback-btn:active { transform: scale(0.95); }
         .feedback-btn.yes { background-color: #00ff00; color: #000; }
@@ -173,29 +129,21 @@
     </style>
 </head>
 <body>
-
     <div class="header">
         <div class="logo">Meteorawa</div>
         <div class="status-dot" id="statusDot"></div>
         <div class="header-actions">
             <div class="icon-btn" onclick="openSearch()">🔎</div>
-            <div class="icon-btn" onclick="openSettings()">
-                <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
-            </div>
+            <div class="icon-btn" onclick="openSettings()"><svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg></div>
         </div>
     </div>
-
     <div class="main-content">
         <div class="weather-card">
             <div class="card-help-btn" onclick="openFeedback()">?</div>
             <div class="card-loc-btn" onclick="getUserLocation()">📳</div>
-            
             <div class="location" id="currentLocation">...</div>
             <div class="temperature" id="mainTemp">--°C</div>
-            <div class="condition">
-                <span class="weather-icon" id="weatherIcon">⏳</span>
-                <span class="weather-desc" id="weatherDesc">...</span>
-            </div>
+            <div class="condition"><span class="weather-icon" id="weatherIcon">⏳</span><span class="weather-desc" id="weatherDesc">...</span></div>
             <div class="details">
                 <div class="detail-item"><span data-i18n="humidity">Влажность</span> <span id="humidity">--%</span></div>
                 <div class="detail-item"><span data-i18n="wind">Ветер</span> <span id="windSpeed">--</span></div>
@@ -203,24 +151,14 @@
             <button class="retry-btn" id="retryBtn" onclick="retryFetch()" data-i18n="retry">Повторить</button>
         </div>
     </div>
-
     <div class="forecast-panel">
         <div class="forecast-title" data-i18n="forecast_title">Прогноз на 15 дней</div>
-        <div class="forecast-scroll" id="forecastScroll">
-            <div class="loading-text" style="width:100%; text-align:center; padding: 20px;">...</div>
-        </div>
+        <div class="forecast-scroll" id="forecastScroll"><div class="loading-text" style="width:100%; text-align:center; padding: 20px;">...</div></div>
     </div>
-
     <div class="modal-overlay" id="detailModal" onclick="closeDetailModal(event)">
         <div class="settings-card" onclick="event.stopPropagation()">
-            <div class="card-header">
-                <h2 id="detailDate">...</h2>
-                <button class="close-btn" onclick="closeDetailModal(event)">X</button>
-            </div>
-            <div style="text-align: center; margin: 5px 0;">
-                <div style="font-size: 50px; line-height: 1;" id="detailIcon">☀️</div>
-                <div style="font-size: 16px; font-weight: bold; margin-top: 5px;" id="detailDesc">...</div>
-            </div>
+            <div class="card-header"><h2 id="detailDate">...</h2><button class="close-btn" onclick="closeDetailModal(event)">X</button></div>
+            <div style="text-align: center; margin: 5px 0;"><div style="font-size: 50px; line-height: 1;" id="detailIcon">☀️</div><div style="font-size: 16px; font-weight: bold; margin-top: 5px;" id="detailDesc">...</div></div>
             <div class="detail-grid">
                 <div class="detail-row"><span data-i18n="max_temp">Максимальная темп.</span> <b id="detailMax">--°C</b></div>
                 <div class="detail-row"><span data-i18n="min_temp">Минимальная темп.</span> <b id="detailMin">--°C</b></div>
@@ -232,78 +170,36 @@
             </div>
         </div>
     </div>
-
     <div class="modal-overlay" id="searchModal">
         <div class="settings-card">
-            <div class="card-header">
-                <h2 data-i18n="search_title">Поиск города</h2>
-                <button class="close-btn" onclick="closeSearch()">X</button>
-            </div>
+            <div class="card-header"><h2 data-i18n="search_title">Поиск города</h2><button class="close-btn" onclick="closeSearch()">X</button></div>
             <input type="text" id="searchInput" class="search-input" placeholder="..." oninput="handleSearchInput()">
             <div class="search-results" id="searchResults"></div>
         </div>
     </div>
-
     <div class="modal-overlay" id="feedbackModal" onclick="closeFeedback(event)">
         <div class="settings-card" onclick="event.stopPropagation()">
-            <div class="card-header">
-                <h2 data-i18n="feedback_title">Обратная связь</h2>
-                <button class="close-btn" onclick="closeFeedback(event)">X</button>
-            </div>
-            <div style="text-align: center; margin: 15px 0; font-size: 20px; font-weight: 500;" data-i18n="feedback_question">
-                Верный ли прогноз?
-            </div>
-            <div style="display: flex; gap: 15px;">
-                <button class="feedback-btn no" onclick="submitFeedback(false)" data-i18n="no">Нет</button>
-                <button class="feedback-btn yes" onclick="submitFeedback(true)" data-i18n="yes">Да</button>
-            </div>
+            <div class="card-header"><h2 data-i18n="feedback_title">Обратная связь</h2><button class="close-btn" onclick="closeFeedback(event)">X</button></div>
+            <div style="text-align: center; margin: 15px 0; font-size: 20px; font-weight: 500;" data-i18n="feedback_question">Верный ли прогноз?</div>
+            <div style="display: flex; gap: 15px;"><button class="feedback-btn no" onclick="submitFeedback(false)" data-i18n="no">Нет</button><button class="feedback-btn yes" onclick="submitFeedback(true)" data-i18n="yes">Да</button></div>
         </div>
     </div>
-
     <div class="modal-overlay" id="settingsModal">
         <div class="settings-card">
-            <div class="card-header">
-                <h2 data-i18n="settings">Настройки</h2>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <button class="save-btn" id="saveBtn" onclick="saveSettings()" data-i18n="save">Сохранить</button>
-                    <button class="close-btn" onclick="closeSettings()">X</button>
-                </div>
-            </div>
-            
-            <button class="theme-toggle-btn" onclick="toggleList('themeList')">
-                <div class="title" data-i18n="themes">Темы</div>
-                <div class="subtitle" data-i18n="themes_sub">настройки тем</div>
-            </button>
+            <div class="card-header"><h2 data-i18n="settings">Настройки</h2><div style="display: flex; gap: 10px; align-items: center;"><button class="save-btn" id="saveBtn" onclick="saveSettings()" data-i18n="save">Сохранить</button><button class="close-btn" onclick="closeSettings()">X</button></div></div>
+            <button class="theme-toggle-btn" onclick="toggleList('themeList')"><div class="title" data-i18n="themes">Темы</div><div class="subtitle" data-i18n="themes_sub">настройки тем</div></button>
             <div class="theme-list" id="themeList">
                 <div class="theme-item" id="theme-light" onclick="selectTheme('light')"><div class="text"><div class="title" data-i18n="theme_light">Белая</div></div><div class="check">•</div></div>
                 <div class="theme-item" id="theme-dark" onclick="selectTheme('dark')"><div class="text"><div class="title" data-i18n="theme_dark">Черная</div></div><div class="check">•</div></div>
                 <div class="theme-item" id="theme-pencil" onclick="selectTheme('pencil')"><div class="text"><div class="title" data-i18n="theme_pencil">Карандаш</div></div><div class="check">•</div></div>
                 <div class="theme-item" id="theme-system" onclick="selectTheme('system')"><div class="text"><div class="title" data-i18n="theme_system">Системная</div></div><div class="check">•</div></div>
             </div>
-
-            <button class="theme-toggle-btn" onclick="toggleList('weatherSettingsList')" style="margin-top: 10px;">
-                <div class="title" data-i18n="weather_settings">Настройки погоды</div>
-                <div class="subtitle" data-i18n="weather_sub">настройки погоды</div>
-            </button>
+            <button class="theme-toggle-btn" onclick="toggleList('weatherSettingsList')" style="margin-top: 10px;"><div class="title" data-i18n="weather_settings">Настройки погоды</div><div class="subtitle" data-i18n="weather_sub">настройки погоды</div></button>
             <div class="theme-list" id="weatherSettingsList">
-                <div class="theme-item" onclick="toggleWindUnit()">
-                    <div class="text">
-                        <div class="title" data-i18n="wind_unit">Измерение силы ветра</div>
-                        <div class="subtitle"><span data-i18n="wind_sub">единицы</span> (<span id="windUnitLabel">м/с</span>)</div>
-                    </div>
-                </div>
-                <div class="theme-item" onclick="toggleTempUnit()">
-                    <div class="text">
-                        <div class="title" data-i18n="temp_unit">Единицы температуры</div>
-                        <div class="subtitle"><span data-i18n="temp_sub">единицы</span> (<span id="tempUnitLabel">°C</span>)</div>
-                    </div>
-                </div>
+                <div class="theme-item" onclick="toggleWindUnit()"><div class="text"><div class="title" data-i18n="wind_unit">Измерение силы ветра</div><div class="subtitle"><span data-i18n="wind_sub">единицы</span> (<span id="windUnitLabel">м/с</span>)</div></div></div>
+                <div class="theme-item" onclick="toggleTempUnit()"><div class="text"><div class="title" data-i18n="temp_unit">Единицы температуры</div><div class="subtitle"><span data-i18n="temp_sub">единицы</span> (<span id="tempUnitLabel">°C</span>)</div></div></div>
             </div>
-
-            <button class="theme-toggle-btn" onclick="toggleList('langList')" style="margin-top: 10px;">
-                <div class="title" data-i18n="languages">Языки</div>
-                <div class="subtitle" data-i18n="lang_sub">настройки языков для приложения</div>
-            </button>
+            <button class="theme-toggle-btn" onclick="toggleList('langList')" style="margin-top: 10px;"><div class="title" data-i18n="languages">Языки</div><div class="subtitle" data-i18n="lang_sub">настройки языков для приложения</div></button>
             <div class="theme-list" id="langList">
                 <div class="theme-item" id="lang-system" onclick="changeLang('system')"><div class="text"><div class="title" data-i18n="system_lang">Системный</div></div><div class="check">•</div></div>
                 <div class="theme-item" id="lang-ru" onclick="changeLang('ru')"><div class="text"><div class="title">Русский</div></div><div class="check">•</div></div>
@@ -313,354 +209,32 @@
                 <div class="theme-item" id="lang-fr" onclick="changeLang('fr')"><div class="text"><div class="title">Français</div></div><div class="check">•</div></div>
                 <div class="theme-item" id="lang-zh" onclick="changeLang('zh')"><div class="text"><div class="title">中文</div></div><div class="check">•</div></div>
             </div>
-
         </div>
     </div>
-
     <script>
-        // === VISUAL CROSSING API (БЕЗ КЛЮЧА) ===
-        // Работает без регистрации и ключей. Если лимиты будут исчерпаны, 
-        // можно зарегистрироваться на visualcrossing.com и добавить ключ.
-
-        const i18n = {
-            ru: {
-                humidity: "Влажность", wind: "Ветер", retry: "Повторить", forecast_title: "Прогноз на 15 дней (нажмите)",
-                max_temp: "Максимальная темп.", min_temp: "Минимальная темп.", precip: "Осадки за день", hourly: "Почасовой прогноз",
-                search_title: "Поиск города", settings: "Настройки", save: "Сохранить", themes: "Темы", themes_sub: "настройки тем",
-                theme_light: "Белая тема", theme_dark: "Черная тема", theme_pencil: "Карандашный скетч", theme_system: "Системная тема",
-                weather_settings: "Настройки погоды", weather_sub: "настройки погоды", wind_unit: "Измерение силы ветра", wind_sub: "настройки единицы",
-                temp_unit: "Единицы температуры", temp_sub: "настройки единицы", languages: "Языки", lang_sub: "настройки языков", system_lang: "Системный",
-                m_s: "м/с", km_h: "км/ч", mph: "миль/ч", mm: "мм", today: "Сегодня",
-                feedback_title: "Обратная связь", feedback_question: "Верный ли прогноз?", yes: "Да", no: "Нет",
-                thanks_yes: "Отлично! Спасибо за отзыв.", thanks_no: "Спасибо, мы постараемся улучшить прогнозы!"
-            },
-            en: {
-                humidity: "Humidity", wind: "Wind", retry: "Retry", forecast_title: "15-day Forecast (tap for details)",
-                max_temp: "Max Temp", min_temp: "Min Temp", precip: "Precipitation", hourly: "Hourly forecast",
-                search_title: "Search City", settings: "Settings", save: "Save", themes: "Themes", themes_sub: "theme settings",
-                theme_light: "Light Theme", theme_dark: "Dark Theme", theme_pencil: "Pencil Sketch", theme_system: "System Theme",
-                weather_settings: "Weather Settings", weather_sub: "weather settings", wind_unit: "Wind Speed Unit", wind_sub: "wind settings",
-                temp_unit: "Temperature Unit", temp_sub: "temp settings", languages: "Languages", lang_sub: "app language settings", system_lang: "System",
-                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Today",
-                feedback_title: "Feedback", feedback_question: "Is the forecast correct?", yes: "Yes", no: "No",
-                thanks_yes: "Great! Thanks for the feedback.", thanks_no: "Thanks, we will try to improve!"
-            },
-            es: { humidity: "Humedad", wind: "Viento", retry: "Reintentar", forecast_title: "Pronóstico 15 días (toca detalles)", max_temp: "Máx", min_temp: "Mín", precip: "Precipitación", hourly: "Por horas", search_title: "Buscar Ciudad", settings: "Ajustes", save: "Guardar", themes: "Temas", themes_sub: "ajustes", theme_light: "Claro", theme_dark: "Oscuro", theme_pencil: "Lápiz", theme_system: "Sistema", weather_settings: "Ajustes Clima", weather_sub: "ajustes", wind_unit: "Unidad Viento", wind_sub: "viento", temp_unit: "Unidad Temp", temp_sub: "temp", languages: "Idiomas", lang_sub: "idioma", system_lang: "Sistema", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Hoy", feedback_title: "Comentarios", feedback_question: "¿Pronóstico correcto?", yes: "Sí", no: "No", thanks_yes: "¡Genial! Gracias.", thanks_no: "¡Gracias, mejoraremos!" },
-            de: { humidity: "Luftfeuchtigkeit", wind: "Wind", retry: "Wiederholen", forecast_title: "15-Tage-Vorhersage (tippen)", max_temp: "Max Temp", min_temp: "Min Temp", precip: "Niederschlag", hourly: "Stündlich", search_title: "Stadt suchen", settings: "Einstellungen", save: "Speichern", themes: "Designs", themes_sub: "Design", theme_light: "Hell", theme_dark: "Dunkel", theme_pencil: "Bleistift", theme_system: "System", weather_settings: "Wetter-Einstellungen", weather_sub: "Wetter", wind_unit: "Windgeschwindigkeit", wind_sub: "Wind", temp_unit: "Temperatureinheit", temp_sub: "Temp", languages: "Sprachen", lang_sub: "Sprache", system_lang: "System", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Heute", feedback_title: "Feedback", feedback_question: "Ist die Vorhersage korrekt?", yes: "Ja", no: "Nein", thanks_yes: "Super! Danke.", thanks_no: "Danke, wir verbessern uns!" },
-            fr: { humidity: "Humidité", wind: "Vent", retry: "Réessayer", forecast_title: "Prévisions 15 jours (toucher)", max_temp: "Temp Max", min_temp: "Temp Min", precip: "Précipitations", hourly: "Horaire", search_title: "Chercher une ville", settings: "Paramètres", save: "Enregistrer", themes: "Thèmes", themes_sub: "thème", theme_light: "Clair", theme_dark: "Sombre", theme_pencil: "Crayon", theme_system: "Système", weather_settings: "Paramètres Météo", weather_sub: "météo", wind_unit: "Unité de vent", wind_sub: "vent", temp_unit: "Unité de température", temp_sub: "temp", languages: "Langues", lang_sub: "langue", system_lang: "Système", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Aujourd'hui", feedback_title: "Commentaires", feedback_question: "La prévision est-elle correcte ?", yes: "Oui", no: "Non", thanks_yes: "Génial ! Merci.", thanks_no: "Merci, nous améliorerons !" },
-            zh: { humidity: "湿度", wind: "风速", retry: "重试", forecast_title: "15天预报 (点击详情)", max_temp: "最高温", min_temp: "最低温", precip: "降水量", hourly: "逐小时", search_title: "搜索城市", settings: "设置", save: "保存", themes: "主题", themes_sub: "主题", theme_light: "浅色", theme_dark: "深色", theme_pencil: "铅笔", theme_system: "系统", weather_settings: "天气设置", weather_sub: "天气", wind_unit: "风速单位", wind_sub: "风速", temp_unit: "温度单位", temp_sub: "温度", languages: "语言", lang_sub: "语言", system_lang: "系统", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "今天", feedback_title: "反馈", feedback_question: "预报准确吗？", yes: "是的", no: "不是", thanks_yes: "太好了！感谢您的反馈。", thanks_no: "谢谢，我们会努力改进！" }
-        };
-
-        let currentLang = 'ru';
-        let sysLang = navigator.language.split('-')[0] || 'en';
-        if (!i18n[sysLang]) sysLang = 'en';
-
-        let lastWeatherData = null; 
-        let currentWindUnit = 'm/s'; 
-        let currentTempUnit = 'C';
-        let currentLat = 55.7558;
-        let currentLon = 37.6173;
-        let currentCity = "Москва";
-
-        function openFeedback() { document.getElementById('feedbackModal').classList.add('active'); }
-        function closeFeedback(event) { if (event) event.stopPropagation(); document.getElementById('feedbackModal').classList.remove('active'); }
-        function submitFeedback(isCorrect) {
-            const lang = currentLang === 'system' ? sysLang : currentLang;
-            alert(isCorrect ? i18n[lang].thanks_yes : i18n[lang].thanks_no);
-            closeFeedback();
-        }
-
-        function getUserLocation() {
-            if (navigator.geolocation) {
-                document.getElementById('currentLocation').innerText = 'Определение...';
-                document.getElementById('mainTemp').innerText = '...';
-                document.getElementById('weatherDesc').innerText = '...';
-                document.getElementById('weatherIcon').innerText = '📳';
-                
-                navigator.geolocation.getCurrentPosition(
-                    (position) => {
-                        currentLat = position.coords.latitude;
-                        currentLon = position.coords.longitude;
-                        currentCity = "Мое местоположение";
-                        fetchWeather(currentLat, currentLon, "Мое местоположение");
-                    },
-                    (error) => {
-                        console.error("Ошибка геолокации:", error);
-                        alert("Не удалось определить местоположение. Разрешите доступ к GPS.");
-                        if (lastWeatherData) { renderWeatherDisplay(); document.getElementById('currentLocation').innerText = currentCity; } 
-                        else { fetchWeather(55.7558, 37.6173, "Москва"); }
-                    },
-                    { timeout: 10000, maximumAge: 60000 }
-                );
-            } else { alert("Ваш браузер не поддерживает геолокацию."); }
-        }
-
-        function updateUILanguage() {
-            const lang = currentLang === 'system' ? sysLang : currentLang;
-            document.documentElement.lang = lang;
-            
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (i18n[lang] && i18n[lang][key]) el.innerText = i18n[lang][key];
-            });
-            
-            document.getElementById('searchInput').placeholder = lang === 'ru' ? 'Введите город...' : 'Enter city...';
-            document.getElementById('windUnitLabel').innerText = i18n[lang][currentWindUnit === 'm/s' ? 'm_s' : (currentWindUnit === 'km/h' ? 'km_h' : 'mph')];
-            document.getElementById('tempUnitLabel').innerText = currentTempUnit === 'C' ? '°C' : '°F';
-
-            if (lastWeatherData) renderWeatherDisplay();
-        }
-
-        function changeLang(langCode) {
-            currentLang = langCode;
-            document.querySelectorAll('#langList .theme-item').forEach(el => el.classList.remove('selected'));
-            document.getElementById('lang-' + langCode).classList.add('selected');
-            updateUILanguage();
-            if (currentLat && currentLon) fetchWeather(currentLat, currentLon, currentCity);
-        }
-
-        function formatTemp(celsius) {
-            if (celsius === undefined || celsius === null) return '--°';
-            if (currentTempUnit === 'C') return `${Math.round(celsius)}°C`;
-            return `${Math.round(celsius * 9/5 + 32)}°F`;
-        }
-
-        function formatWind(mps) {
-            if (mps === undefined || mps === null) return '--';
-            const lang = currentLang === 'system' ? sysLang : currentLang;
-            const unitText = i18n[lang][currentWindUnit === 'm/s' ? 'm_s' : (currentWindUnit === 'km/h' ? 'km_h' : 'mph')];
-            if (currentWindUnit === 'm/s') return `${Math.round(mps)} ${unitText}`;
-            if (currentWindUnit === 'km/h') return `${Math.round(mps * 3.6)} ${unitText}`;
-            return `${Math.round(mps * 2.23694)} ${unitText}`;
-        }
-
-        function toggleWindUnit() {
-            if (currentWindUnit === 'm/s') currentWindUnit = 'km/h';
-            else if (currentWindUnit === 'km/h') currentWindUnit = 'mph';
-            else currentWindUnit = 'm/s';
-            updateUILanguage();
-        }
-
-        function toggleTempUnit() {
-            currentTempUnit = currentTempUnit === 'C' ? 'F' : 'C';
-            updateUILanguage();
-        }
-
-        function getVCWeatherIcon(icon) {
-            if (!icon) return '☁️';
-            if (icon.includes('clear-day')) return '☀️';
-            if (icon.includes('clear-night')) return '🌙';
-            if (icon.includes('partly-cloudy-day')) return '🌤️';
-            if (icon.includes('partly-cloudy-night')) return '☁️';
-            if (icon.includes('cloudy')) return '☁️';
-            if (icon.includes('rain')) return '🌧️';
-            if (icon.includes('showers-day')) return '🌦️';
-            if (icon.includes('snow')) return '🌨️';
-            if (icon.includes('fog')) return '🌫️';
-            if (icon.includes('wind')) return '💨';
-            if (icon.includes('thunder')) return '⛈️';
-            return '☁️';
-        }
-
-        let selectedTheme = null;
-        function openSettings() { document.getElementById('settingsModal').classList.add('active'); }
-        function closeSettings() { document.getElementById('settingsModal').classList.remove('active'); }
-        function toggleList(id) { document.getElementById(id).classList.toggle('active'); }
-        
-        function selectTheme(theme) { 
-            selectedTheme = theme; 
-            document.querySelectorAll('#themeList .theme-item').forEach(el => el.classList.remove('selected')); 
-            document.getElementById('theme-' + theme).classList.add('selected'); 
-            document.getElementById('saveBtn').classList.add('active'); 
-        }
-        function saveSettings() { 
-            document.body.classList.remove('light-theme', 'pencil-theme'); 
-            if (selectedTheme === 'light') document.body.classList.add('light-theme'); 
-            else if (selectedTheme === 'pencil') document.body.classList.add('pencil-theme'); 
-            closeSettings(); 
-        }
-
-        let searchTimeout = null;
-        function openSearch() { document.getElementById('searchModal').classList.add('active'); document.getElementById('searchInput').focus(); }
-        function closeSearch() { document.getElementById('searchModal').classList.remove('active'); document.getElementById('searchResults').innerHTML = ''; document.getElementById('searchInput').value = ''; }
-
-        function handleSearchInput() {
-            clearTimeout(searchTimeout);
-            const query = document.getElementById('searchInput').value.trim();
-            const resultsContainer = document.getElementById('searchResults');
-            const lang = currentLang === 'system' ? sysLang : currentLang;
-
-            if (query.length < 3) { resultsContainer.innerHTML = '<div class="loading-text">...</div>'; return; }
-            resultsContainer.innerHTML = '<div class="loading-text">...</div>';
-
-            searchTimeout = setTimeout(() => {
-                fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=${lang}&format=json`)
-                .then(res => res.json())
-                .then(data => {
-                    resultsContainer.innerHTML = '';
-                    if (!data.results || data.results.length === 0) { resultsContainer.innerHTML = '<div class="loading-text">404</div>'; return; }
-                    
-                    data.results.forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = 'search-result-item';
-                        div.innerHTML = `<div class="title">${item.name}</div><div class="country">${item.country || ""}</div>`;
-                        div.onclick = () => { 
-                            closeSearch(); 
-                            currentLat = item.latitude; currentLon = item.longitude; currentCity = item.name;
-                            fetchWeather(currentLat, currentLon, item.name); 
-                        };
-                        resultsContainer.appendChild(div);
-                    });
-                })
-                .catch(err => { resultsContainer.innerHTML = `<div class="loading-text" style="color:var(--red)">Error</div>`; });
-            }, 600);
-        }
-
-        function renderWeatherDisplay() {
-            try {
-                if (!lastWeatherData || !lastWeatherData.currentConditions) throw new Error("No data");
-                const current = lastWeatherData.currentConditions;
-                const days = lastWeatherData.days;
-                const lang = currentLang === 'system' ? sysLang : currentLang;
-                const locale = lang === 'zh' ? 'zh-CN' : (lang === 'ru' ? 'ru-RU' : lang);
-
-                document.getElementById('mainTemp').innerText = formatTemp(current.temp);
-                document.getElementById('humidity').innerText = `${current.humidity}%`;
-                document.getElementById('windSpeed').innerText = formatWind(current.windspeed / 3.6);
-                
-                document.getElementById('weatherIcon').innerText = getVCWeatherIcon(current.icon);
-                document.getElementById('weatherDesc').innerText = current.conditions;
-
-                const forecastScroll = document.getElementById('forecastScroll');
-                forecastScroll.innerHTML = ''; 
-                
-                for (let i = 0; i < days.length; i++) {
-                    const dateObj = new Date(days[i].datetime);
-                    const dayName = i === 0 ? i18n[lang].today : dateObj.toLocaleDateString(locale, { weekday: 'short' });
-                    const dayNum = dateObj.toLocaleDateString(locale, { day: 'numeric', month: 'short' });
-                    const infoIcon = getVCWeatherIcon(days[i].icon);
-                    const temp = days[i].tempmax;
-
-                    const div = document.createElement('div');
-                    div.className = 'forecast-item';
-                    div.onclick = () => showDailyDetail(i); 
-                    div.innerHTML = `
-                        <div class="fc-day">${dayName}</div>
-                        <div class="fc-date">${dayNum}</div>
-                        <div class="fc-icon">${infoIcon}</div>
-                        <div class="fc-temp">${formatTemp(temp)}</div>
-                    `;
-                    forecastScroll.appendChild(div);
-                }
-            } catch (e) {
-                console.error("Render error:", e);
-                document.getElementById('weatherDesc').innerText = "Сбой: " + e.message;
-            }
-        }
-
-        async function fetchWeather(lat, lon, cityName) {
-            document.getElementById('currentLocation').innerText = cityName;
-            document.getElementById('mainTemp').innerText = '...';
-            document.getElementById('weatherDesc').innerText = '...';
-            document.getElementById('weatherIcon').innerText = '⏳';
-            document.getElementById('forecastScroll').innerHTML = '<div class="loading-text" style="width:100%; text-align:center; padding: 20px;">...</div>';
-            document.getElementById('retryBtn').style.display = 'none';
-
-            try {
-                // Запрос к Visual Crossing без ключа
-                const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}?unitGroup=metric&include=current,days&contentType=json`;
-                const res = await fetch(url);
-                
-                if (!res.ok) throw new Error("Ошибка сервера Visual Crossing.");
-
-                lastWeatherData = await res.json();
-                renderWeatherDisplay();
-
-            } catch (error) {
-                console.error(error);
-                document.getElementById('mainTemp').innerText = '--°C';
-                document.getElementById('weatherDesc').innerText = "Ошибка"; 
-                document.getElementById('weatherIcon').innerText = '⚠️';
-                document.getElementById('retryBtn').style.display = 'block';
-                document.getElementById('forecastScroll').innerHTML = `<div class="loading-text" style="color:var(--red)">${error.message}</div>`;
-            }
-        }
-
-        function retryFetch() {
-            fetchWeather(currentLat, currentLon, currentCity);
-        }
-
-        function showDailyDetail(index) {
-            if (!lastWeatherData) return;
-            const dayData = lastWeatherData.days[index];
-            const lang = currentLang === 'system' ? sysLang : currentLang;
-            const locale = lang === 'zh' ? 'zh-CN' : (lang === 'ru' ? 'ru-RU' : lang);
-
-            const targetDate = dayData.datetime;
-            const dateObj = new Date(targetDate);
-            const dateString = dateObj.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
-            
-            const detailTitle = index === 0 
-                ? i18n[lang].today + ", " + dateString 
-                : dateString;
-
-            document.getElementById('detailDate').innerText = detailTitle;
-            document.getElementById('detailIcon').innerText = getVCWeatherIcon(dayData.icon);
-            document.getElementById('detailDesc').innerText = dayData.conditions;
-            document.getElementById('detailMax').innerText = formatTemp(dayData.tempmax);
-            document.getElementById('detailMin').innerText = formatTemp(dayData.tempmin);
-            document.getElementById('detailPrecip').innerText = `${dayData.precip} ${i18n[lang].mm}`;
-
-            const hourlyContainer = document.getElementById('hourlyForecastScroll');
-            hourlyContainer.innerHTML = '';
-
-            const currentHour = new Date().getHours();
-
-            if (dayData.hours) {
-                for (let i = 0; i < dayData.hours.length; i++) {
-                    const hourData = dayData.hours[i];
-                    const hour = parseInt(hourData.datetime.split(':')[0]);
-                    
-                    if (index === 0 && hour < currentHour) continue;
-                    if (hour % 3 === 0) {
-                        const hDiv = document.createElement('div');
-                        hDiv.className = 'hourly-item';
-                        hDiv.innerHTML = `
-                            <div class="hourly-time">${hourData.datetime.substring(0, 5)}</div>
-                            <div class="hourly-icon">${getVCWeatherIcon(hourData.icon)}</div>
-                            <div class="hourly-temp">${formatTemp(hourData.temp)}</div>
-                        `;
-                        hourlyContainer.appendChild(hDiv);
-                    }
-                }
-            }
-
-            document.getElementById('detailModal').classList.add('active');
-        }
-
-        function closeDetailModal(event) {
-            if (event) event.stopPropagation();
-            document.getElementById('detailModal').classList.remove('active');
-        }
-
-        window.onload = () => {
-            changeLang('system');
-            fetchWeather(55.7558, 37.6173, "Москва");
-        };
-
-        function checkNetwork() {
-            const start = Date.now();
-            const img = new Image();
-            img.src = "https://www.google.com/favicon.ico?_=" + start;
-            img.onload = () => {
-                const dot = document.getElementById('statusDot');
-                dot.className = "status-dot";
-                if (Date.now() - start > 500) dot.classList.add('yellow');
-            };
-            img.onerror = () => { document.getElementById('statusDot').className = "status-dot red"; };
-        }
-        setInterval(checkNetwork, 3000);
-        checkNetwork();
+        const OPENWEATHER_KEY = 'ba7bfb2a04f042ab98194932260311';
+        const i18n = { ru: { humidity: "Влажность", wind: "Ветер", retry: "Повторить", forecast_title: "Прогноз на 15 дней (нажмите)", max_temp: "Максимальная темп.", min_temp: "Минимальная темп.", precip: "Осадки за день", hourly: "Почасовой прогноз", search_title: "Поиск города", settings: "Настройки", save: "Сохранить", themes: "Темы", themes_sub: "настройки тем", theme_light: "Белая тема", theme_dark: "Черная тема", theme_pencil: "Карандашный скетч", theme_system: "Системная тема", weather_settings: "Настройки погоды", weather_sub: "настройки погоды", wind_unit: "Измерение силы ветра", wind_sub: "настройки единицы", temp_unit: "Единицы температуры", temp_sub: "настройки единицы", languages: "Языки", lang_sub: "настройки языков", system_lang: "Системный", m_s: "м/с", km_h: "км/ч", mph: "миль/ч", mm: "мм", today: "Сегодня", feedback_title: "Обратная связь", feedback_question: "Верный ли прогноз?", yes: "Да", no: "Нет", thanks_yes: "Отлично! Спасибо за отзыв.", thanks_no: "Спасибо, мы постараемся улучшить прогнозы!" }, en: { humidity: "Humidity", wind: "Wind", retry: "Retry", forecast_title: "15-day Forecast (tap for details)", max_temp: "Max Temp", min_temp: "Min Temp", precip: "Precipitation", hourly: "Hourly forecast", search_title: "Search City", settings: "Settings", save: "Save", themes: "Themes", themes_sub: "theme settings", theme_light: "Light Theme", theme_dark: "Dark Theme", theme_pencil: "Pencil Sketch", theme_system: "System Theme", weather_settings: "Weather Settings", weather_sub: "weather settings", wind_unit: "Wind Speed Unit", wind_sub: "wind settings", temp_unit: "Temperature Unit", temp_sub: "temp settings", languages: "Languages", lang_sub: "app language settings", system_lang: "System", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Today", feedback_title: "Feedback", feedback_question: "Is the forecast correct?", yes: "Yes", no: "No", thanks_yes: "Great! Thanks for the feedback.", thanks_no: "Thanks, we will try to improve!" }, es: { humidity: "Humedad", wind: "Viento", retry: "Reintentar", forecast_title: "Pronóstico 15 días (toca detalles)", max_temp: "Máx", min_temp: "Mín", precip: "Precipitación", hourly: "Por horas", search_title: "Buscar Ciudad", settings: "Ajustes", save: "Guardar", themes: "Temas", themes_sub: "ajustes", theme_light: "Claro", theme_dark: "Oscuro", theme_pencil: "Lápiz", theme_system: "Sistema", weather_settings: "Ajustes Clima", weather_sub: "ajustes", wind_unit: "Unidad Viento", wind_sub: "viento", temp_unit: "Unidad Temp", temp_sub: "temp", languages: "Idiomas", lang_sub: "idioma", system_lang: "Sistema", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Hoy", feedback_title: "Comentarios", feedback_question: "¿Pronóstico correcto?", yes: "Sí", no: "No", thanks_yes: "¡Genial! Gracias.", thanks_no: "¡Gracias, mejoraremos!" }, de: { humidity: "Luftfeuchtigkeit", wind: "Wind", retry: "Wiederholen", forecast_title: "15-Tage-Vorhersage (tippen)", max_temp: "Max Temp", min_temp: "Min Temp", precip: "Niederschlag", hourly: "Stündlich", search_title: "Stadt suchen", settings: "Einstellungen", save: "Speichern", themes: "Designs", themes_sub: "Design", theme_light: "Hell", theme_dark: "Dunkel", theme_pencil: "Bleistift", theme_system: "System", weather_settings: "Wetter-Einstellungen", weather_sub: "Wetter", wind_unit: "Windgeschwindigkeit", wind_sub: "Wind", temp_unit: "Temperatureinheit", temp_sub: "Temp", languages: "Sprachen", lang_sub: "Sprache", system_lang: "System", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Heute", feedback_title: "Feedback", feedback_question: "Ist die Vorhersage korrekt?", yes: "Ja", no: "Nein", thanks_yes: "Super! Danke.", thanks_no: "Danke, wir verbessern uns!" }, fr: { humidity: "Humidité", wind: "Vent", retry: "Réessayer", forecast_title: "Prévisions 15 jours (toucher)", max_temp: "Temp Max", min_temp: "Temp Min", precip: "Précipitations", hourly: "Horaire", search_title: "Chercher une ville", settings: "Paramètres", save: "Enregistrer", themes: "Thèmes", themes_sub: "thème", theme_light: "Clair", theme_dark: "Sombre", theme_pencil: "Crayon", theme_system: "Système", weather_settings: "Paramètres Météo", weather_sub: "météo", wind_unit: "Unité de vent", wind_sub: "vent", temp_unit: "Unité de température", temp_sub: "temp", languages: "Langues", lang_sub: "langue", system_lang: "Système", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Aujourd'hui", feedback_title: "Commentaires", feedback_question: "La prévision est-elle correcte ?", yes: "Oui", no: "Non", thanks_yes: "Génial ! Merci.", thanks_no: "Merci, nous améliorerons !" }, zh: { humidity: "湿度", wind: "风速", retry: "重试", forecast_title: "15天预报 (点击详情)", max_temp: "最高温", min_temp: "最低温", precip: "降水量", hourly: "逐小时", search_title: "搜索城市", settings: "设置", save: "保存", themes: "主题", themes_sub: "主题", theme_light: "浅色", theme_dark: "深色", theme_pencil: "铅笔", theme_system: "系统", weather_settings: "天气设置", weather_sub: "天气", wind_unit: "风速单位", wind_sub: "风速", temp_unit: "温度单位", temp_sub: "温度", languages: "语言", lang_sub: "语言", system_lang: "系统", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "今天", feedback_title: "反馈", feedback_question: "预报准确吗？", yes: "是的", no: "不是", thanks_yes: "太好了！感谢您的反馈。", thanks_no: "谢谢，我们会努力改进！" } };
+        let currentLang = 'ru'; let sysLang = navigator.language.split('-')[0] || 'en'; if (!i18n[sysLang]) sysLang = 'en'; let lastWeatherData = null; let currentWindUnit = 'm/s'; let currentTempUnit = 'C'; let currentLat = 55.7558; let currentLon = 37.6173; let currentCity = "Москва";
+        function openFeedback() { document.getElementById('feedbackModal').classList.add('active'); } function closeFeedback(event) { if (event) event.stopPropagation(); document.getElementById('feedbackModal').classList.remove('active'); } function submitFeedback(isCorrect) { const lang = currentLang === 'system' ? sysLang : currentLang; alert(isCorrect ? i18n[lang].thanks_yes : i18n[lang].thanks_no); closeFeedback(); }
+        function getUserLocation() { if (navigator.geolocation) { document.getElementById('currentLocation').innerText = 'Определение...'; document.getElementById('mainTemp').innerText = '...'; document.getElementById('weatherDesc').innerText = '...'; document.getElementById('weatherIcon').innerText = '📳'; navigator.geolocation.getCurrentPosition((position) => { currentLat = position.coords.latitude; currentLon = position.coords.longitude; currentCity = "Мое местоположение"; fetchWeather(currentLat, currentLon, "Мое местоположение"); }, (error) => { console.error("Ошибка геолокации:", error); alert("Не удалось определить местоположение. Разрешите доступ к GPS."); if (lastWeatherData) { renderWeatherDisplay(); document.getElementById('currentLocation').innerText = currentCity; } else { fetchWeather(55.7558, 37.6173, "Москва"); } }, { timeout: 10000, maximumAge: 60000 }); } else { alert("Ваш браузер не поддерживает геолокацию."); } }
+        function updateUILanguage() { const lang = currentLang === 'system' ? sysLang : currentLang; document.documentElement.lang = lang; document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if (i18n[lang] && i18n[lang][key]) el.innerText = i18n[lang][key]; }); document.getElementById('searchInput').placeholder = lang === 'ru' ? 'Введите город...' : 'Enter city...'; document.getElementById('windUnitLabel').innerText = i18n[lang][currentWindUnit === 'm/s' ? 'm_s' : (currentWindUnit === 'km/h' ? 'km_h' : 'mph')]; document.getElementById('tempUnitLabel').innerText = currentTempUnit === 'C' ? '°C' : '°F'; if (lastWeatherData) renderWeatherDisplay(); }
+        function changeLang(langCode) { currentLang = langCode; document.querySelectorAll('#langList .theme-item').forEach(el => el.classList.remove('selected')); document.getElementById('lang-' + langCode).classList.add('selected'); updateUILanguage(); if (currentLat && currentLon) fetchWeather(currentLat, currentLon, currentCity); }
+        function formatTemp(celsius) { if (celsius === undefined || celsius === null) return '--°'; if (currentTempUnit === 'C') return `${Math.round(celsius)}°C`; return `${Math.round(celsius * 9/5 + 32)}°F`; }
+        function formatWind(mps) { if (mps === undefined || mps === null) return '--'; const lang = currentLang === 'system' ? sysLang : currentLang; const unitText = i18n[lang][currentWindUnit === 'm/s' ? 'm_s' : (currentWindUnit === 'km/h' ? 'km_h' : 'mph')]; if (currentWindUnit === 'm/s') return `${Math.round(mps)} ${unitText}`; if (currentWindUnit === 'km/h') return `${Math.round(mps * 3.6)} ${unitText}`; return `${Math.round(mps * 2.23694)} ${unitText}`; }
+        function toggleWindUnit() { if (currentWindUnit === 'm/s') currentWindUnit = 'km/h'; else if (currentWindUnit === 'km/h') currentWindUnit = 'mph'; else currentWindUnit = 'm/s'; updateUILanguage(); } function toggleTempUnit() { currentTempUnit = currentTempUnit === 'C' ? 'F' : 'C'; updateUILanguage(); }
+        function getOWMIcon(iconCode) { let icon = '☁️'; if (iconCode.startsWith('01')) icon = iconCode.includes('n') ? '🌙' : '☀️'; else if (iconCode.startsWith('02')) icon = iconCode.includes('n') ? '🌙' : '🌤️'; else if (iconCode.startsWith('03')) icon = '⛅'; else if (iconCode.startsWith('04')) icon = '☁️'; else if (iconCode.startsWith('09') || iconCode.startsWith('10')) icon = '🌧️'; else if (iconCode.startsWith('11')) icon = '⛈️'; else if (iconCode.startsWith('13')) icon = '🌨️'; else if (iconCode.startsWith('50')) icon = '🌫️'; return icon; }
+        let selectedTheme = null; function openSettings() { document.getElementById('settingsModal').classList.add('active'); } function closeSettings() { document.getElementById('settingsModal').classList.remove('active'); } function toggleList(id) { document.getElementById(id).classList.toggle('active'); }
+        function selectTheme(theme) { selectedTheme = theme; document.querySelectorAll('#themeList .theme-item').forEach(el => el.classList.remove('selected')); document.getElementById('theme-' + theme).classList.add('selected'); document.getElementById('saveBtn').classList.add('active'); }
+        function saveSettings() { document.body.classList.remove('light-theme', 'pencil-theme'); if (selectedTheme === 'light') document.body.classList.add('light-theme'); else if (selectedTheme === 'pencil') document.body.classList.add('pencil-theme'); closeSettings(); }
+        let searchTimeout = null; function openSearch() { document.getElementById('searchModal').classList.add('active'); document.getElementById('searchInput').focus(); } function closeSearch() { document.getElementById('searchModal').classList.remove('active'); document.getElementById('searchResults').innerHTML = ''; document.getElementById('searchInput').value = ''; }
+        function handleSearchInput() { clearTimeout(searchTimeout); const query = document.getElementById('searchInput').value.trim(); const resultsContainer = document.getElementById('searchResults'); const lang = currentLang === 'system' ? sysLang : currentLang; if (query.length < 3) { resultsContainer.innerHTML = '<div class="loading-text">...</div>'; return; } resultsContainer.innerHTML = '<div class="loading-text">...</div>'; searchTimeout = setTimeout(() => { fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=${lang}&format=json`).then(res => res.json()).then(data => { resultsContainer.innerHTML = ''; if (!data.results || data.results.length === 0) { resultsContainer.innerHTML = '<div class="loading-text">404</div>'; return; } data.results.forEach(item => { const div = document.createElement('div'); div.className = 'search-result-item'; div.innerHTML = `<div class="title">${item.name}</div><div class="country">${item.country || ""}</div>`; div.onclick = () => { closeSearch(); currentLat = item.latitude; currentLon = item.longitude; currentCity = item.name; fetchWeather(currentLat, currentLon, item.name); }; resultsContainer.appendChild(div); }); }).catch(err => { resultsContainer.innerHTML = `<div class="loading-text" style="color:var(--red)">Error</div>`; }); }, 600); }
+        function renderWeatherDisplay() { try { if (!lastWeatherData || !lastWeatherData.current) throw new Error("No data"); const current = lastWeatherData.current; const daily = lastWeatherData.daily; const lang = currentLang === 'system' ? sysLang : currentLang; const locale = lang === 'zh' ? 'zh-CN' : (lang === 'ru' ? 'ru-RU' : lang); document.getElementById('mainTemp').innerText = formatTemp(current.main.temp); document.getElementById('humidity').innerText = `${current.main.humidity}%`; document.getElementById('windSpeed').innerText = formatWind(current.wind.speed); document.getElementById('weatherIcon').innerText = getOWMIcon(current.weather[0].icon); document.getElementById('weatherDesc').innerText = current.weather[0].description; const forecastScroll = document.getElementById('forecastScroll'); forecastScroll.innerHTML = ''; const dailyData = {}; lastWeatherData.list.forEach(item => { const dateStr = item.dt_txt.split(' ')[0]; const temp = item.main.temp; if (!dailyData[dateStr]) { dailyData[dateStr] = { temp_max: temp, temp_min: temp, icon: item.weather[0].icon, desc: item.weather[0].description, time: item.dt_txt, precip: item.rain ? (item.rain['3h'] || 0) : 0 }; } else { if (temp > dailyData[dateStr].temp_max) dailyData[dateStr].temp_max = temp; if (temp < dailyData[dateStr].temp_min) dailyData[dateStr].temp_min = temp; if (item.rain) dailyData[dateStr].precip += (item.rain['3h'] || 0); const hour = parseInt(item.dt_txt.split(' ')[1].split(':')[0]); if (hour === 12) { dailyData[dateStr].icon = item.weather[0].icon; dailyData[dateStr].desc = item.weather[0].description; } } }); const todayStr = new Date().toISOString().split('T')[0]; delete dailyData[todayStr]; Object.keys(dailyData).forEach(dateStr => { const day = dailyData[dateStr]; const dateObj = new Date(day.time); const dayName = dateObj.toLocaleDateString(locale, { weekday: 'short' }); const dayNum = dateObj.toLocaleDateString(locale, { day: 'numeric', month: 'short' }); const infoIcon = getOWMIcon(day.icon); const div = document.createElement('div'); div.className = 'forecast-item'; div.onclick = () => showDailyDetail(dateStr, dailyData[dateStr]); div.innerHTML = `<div class="fc-day">${dayName}</div><div class="fc-date">${dayNum}</div><div class="fc-icon">${infoIcon}</div><div class="fc-temp">${formatTemp(day.temp_max)}</div>`; forecastScroll.appendChild(div); }); } catch (e) { console.error("Render error:", e); document.getElementById('weatherDesc').innerText = "Сбой: " + e.message; } }
+        async function fetchWeather(lat, lon, cityName) { document.getElementById('currentLocation').innerText = cityName; document.getElementById('mainTemp').innerText = '...'; document.getElementById('weatherDesc').innerText = '...'; document.getElementById('weatherIcon').innerText = '⏳'; document.getElementById('forecastScroll').innerHTML = '<div class="loading-text" style="width:100%; text-align:center; padding: 20px;">...</div>'; document.getElementById('retryBtn').style.display = 'none'; const lang = currentLang === 'system' ? sysLang : currentLang; try { const [currentRes, forecastRes] = await Promise.all([ fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=${lang}&appid=${OPENWEATHER_KEY}`), fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&lang=${lang}&appid=${OPENWEATHER_KEY}`) ]); if (!currentRes.ok || !forecastRes.ok) throw new Error("Ошибка сервера (проверьте ключ)"); const currentData = await currentRes.json(); const forecastData = await forecastRes.json(); lastWeatherData = { current: currentData, list: forecastData.list }; renderWeatherDisplay(); } catch (error) { console.error(error); document.getElementById('mainTemp').innerText = '--°C'; document.getElementById('weatherDesc').innerText = "Ошибка"; document.getElementById('weatherIcon').innerText = '⚠️'; document.getElementById('retryBtn').style.display = 'block'; document.getElementById('forecastScroll').innerHTML = `<div class="loading-text" style="color:var(--red)">${error.message}</div>`; } }
+        function retryFetch() { fetchWeather(currentLat, currentLon, currentCity); }
+        function showDailyDetail(dateStr, dayData) { const infoIcon = getOWMIcon(dayData.icon); const desc = dayData.desc; const dateObj = new Date(dayData.time); const lang = currentLang === 'system' ? sysLang : currentLang; const locale = lang === 'zh' ? 'zh-CN' : (lang === 'ru' ? 'ru-RU' : lang); const dateString = dateObj.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' }); const detailTitle = dateStr === new Date().toISOString().split('T')[0] ? i18n[lang].today + ", " + dateString : dateString; document.getElementById('detailDate').innerText = detailTitle; document.getElementById('detailIcon').innerText = infoIcon; document.getElementById('detailDesc').innerText = desc; document.getElementById('detailMax').innerText = formatTemp(dayData.temp_max); document.getElementById('detailMin').innerText = formatTemp(dayData.temp_min); const langObj = i18n[lang]; document.getElementById('detailPrecip').innerText = `${dayData.precip.toFixed(1)} ${langObj.mm}`; const hourlyContainer = document.getElementById('hourlyForecastScroll'); hourlyContainer.innerHTML = ''; const dayHours = lastWeatherData.list.filter(item => item.dt_txt.startsWith(dateStr)); dayHours.forEach(item => { const hourDate = new Date(item.dt_txt); const hIcon = getOWMIcon(item.weather[0].icon); const hDiv = document.createElement('div'); hDiv.className = 'hourly-item'; hDiv.innerHTML = `<div class="hourly-time">${hourDate.toLocaleTimeString(locale, {hour: '2-digit', minute:'2-digit'})}</div><div class="hourly-icon">${hIcon}</div><div class="hourly-temp">${formatTemp(item.main.temp)}</div>`; hourlyContainer.appendChild(hDiv); }); document.getElementById('detailModal').classList.add('active'); }
+        function closeDetailModal(event) { if (event) event.stopPropagation(); document.getElementById('detailModal').classList.remove('active'); }
+        window.onload = () => { changeLang('system'); fetchWeather(55.7558, 37.6173, "Москва"); };
+        function checkNetwork() { const start = Date.now(); const img = new Image(); img.src = "https://www.google.com/favicon.ico?_=" + start; img.onload = () => { const dot = document.getElementById('statusDot'); dot.className = "status-dot"; if (Date.now() - start > 500) dot.classList.add('yellow'); }; img.onerror = () => { document.getElementById('statusDot').className = "status-dot red"; }; } setInterval(checkNetwork, 3000); checkNetwork();
     </script>
 </body>
 </html>
