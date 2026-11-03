@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Meteorawa</title>
+    <!-- Подключаем рукописный шрифт для карандашной темы -->
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #121212; --text-color: #ffffff; --text-muted: #888888;
+            --card-bg: rgba(255, 255, 255, 0.05); --card-border: rgba(255, 255, 255, 0.1);
+            --icon-color: #cccccc; --green: #00ff00; --red: #ff3333;
+            --bg-image: none; --card-radius: 32px;
+            --forecast-bg: rgba(0, 0, 0, 0.4);
+        }
+        body.light-theme {
+            --bg-color: #f5f5f5; --text-color: #000000; --text-muted: #666666;
+            --card-bg: rgba(255, 255, 255, 0.7); --card-border: rgba(0, 0, 0, 0.08);
+            --icon-color: #333333; --green: #008800; --bg-image: none; --card-radius: 32px;
+            --forecast-bg: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* === НАСТОЯЩАЯ КАРАНДАШНАЯ ТЕМА === */
+        body.pencil-theme {
+            --bg-color: #fcfbf7; 
+            --text-color: #2c2c2c; 
+            --text-muted: #6a6a6a;
+            --card-bg: transparent; 
+            --card-border: #4a4a4a;
+            --icon-color: #2c2c2c;
+            --green: #4a7c59;
+            --card-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+            --forecast-bg: rgba(252, 251, 247, 0.95);
+            --bg-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            font-family: 'Caveat', 'Comic Sans MS', cursive; 
+        }
+
+        body.pencil-theme * {
+            font-family: 'Caveat', 'Comic Sans MS', cursive !important;
+        }
+
+        body.pencil-theme .weather-icon,
+        body.pencil-theme .fc-icon,
+        body.pencil-theme .hourly-icon {
+            filter: grayscale(100%) contrast(150%) sepia(10%);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        body.pencil-theme .status-dot {
+            background-color: var(--green);
+            box-shadow: 1px 1px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(255,255,255,0.5);
+            border: 1px solid var(--text-color);
+        }
+        body.pencil-theme .status-dot.yellow { background-color: #d4a373; border-color: #b5835a; }
+        body.pencil-theme .status-dot.red { background-color: #a44a3f; border-color: #7a2e2e; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body { 
+            background-color: var(--bg-color); background-image: var(--bg-image); background-attachment: fixed; 
+            color: var(--text-color); transition: all 0.3s; height: 100vh; overflow: hidden; 
+            display: flex; flex-direction: column; 
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        .header { display: flex; align-items: center; padding: 20px; position: absolute; top: 0; width: 100%; z-index: 10; padding-top: max(20px, env(safe-area-inset-top)); }
+        .logo { font-size: 32px; font-weight: bold; color: var(--green); margin-right: 10px; letter-spacing: 1px; }
+        body.pencil-theme .logo { text-shadow: 1px 1px 1px rgba(0,0,0,0.2); font-size: 36px;}
+        
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; background-color: var(--green); box-shadow: 0 0 10px var(--green); transition: all 0.3s; }
+        .status-dot.yellow { background-color: #ffcc00; box-shadow: 0 0 10px #ffcc00; }
+        .status-dot.red { background-color: var(--red); box-shadow: 0 0 10px var(--red); }
+        
+        .header-actions { margin-left: auto; display: flex; gap: 10px; }
+        .icon-btn { width: 45px; height: 45px; border-radius: 50%; background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--card-border); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s; font-size: 20px; color: var(--icon-color); user-select: none; }
+        .icon-btn:active { background: rgba(128, 128, 128, 0.2); }
+        
+        body.pencil-theme .icon-btn { 
+            border: 2px solid var(--card-border); 
+            border-radius: 48% 52% 45% 55% / 55% 45% 52% 48%; 
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.15);
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px);
+        }
+
+        .main-content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; padding-top: 80px; overflow-y: auto; }
+        
+        .weather-card { 
+            background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid var(--card-border); 
+            border-radius: var(--card-radius); padding: 30px 40px; width: 100%; max-width: 350px; 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); text-align: center; transition: all 0.3s ease; position: relative;
+        }
+        
+        body.pencil-theme .weather-card { 
+            border: 2px solid var(--card-border); 
+            box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.15), -1px -1px 0px rgba(0,0,0,0.05);
+            background-image: 
+                repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px),
+                repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(0,0,0,0.02) 5px, rgba(0,0,0,0.02) 6px);
+        }
+
+        body.pencil-theme .weather-card::after {
+            content: '';
+            position: absolute;
+            top: 4px; left: -4px; right: -3px; bottom: -5px;
+            border: 1px solid var(--card-border);
+            border-radius: 15px 255px 15px 225px / 225px 15px 255px 15px; 
+            opacity: 0.6;
+            pointer-events: none;
+            transform: rotate(0.5deg);
+        }
+
+        .card-loc-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 16px;
+            color: var(--icon-color);
+            z-index: 5;
+        }
+        .card-loc-btn:active { background: rgba(128, 128, 128, 0.3); }
+        
+        body.pencil-theme .card-loc-btn {
+            border: 2px dashed var(--card-border);
+            background: transparent;
+            border-radius: 50% 45% 55% 48% / 45% 50% 48% 55%;
+            box-shadow: 1px 1px 0px rgba(0,0,0,0.1);
+        }
+
+        .location { font-size: 14px; text-transform: capitalize; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 20px; }
+        body.pencil-theme .location { font-size: 24px; font-weight: bold; letter-spacing: 0; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); }
+        
+        .temperature { font-size: 96px; font-weight: 700; line-height: 1; margin-bottom: 5px; color: var(--text-color); }
+        body.pencil-theme .temperature { font-size: 120px; text-shadow: 2px 2px 3px rgba(0,0,0,0.15); }
+        
+        .condition { font-size: 18px; font-weight: 500; margin-bottom: 25px; display: flex; align-items: center; justify-content: center; gap: 12px; color: var(--text-color); min-height: 40px; }
+        body.pencil-theme .condition { font-size: 26px; }
+        
+        .weather-icon { font-size: 32px; line-height: 1; display: flex; align-items: center; }
+        .weather-desc { line-height: 1.2; display: flex; align-items: center; margin-top: 2px; text-align: left; }
+        
+        .details { display: flex; justify-content: space-between; border-top: 1px solid var(--card-border); padding-top: 20px; font-size: 14px; color: var(--text-muted); }
+        body.pencil-theme .details { border-top: 2px dashed var(--card-border); font-size: 20px; }
+        
+        .detail-item span { display: block; color: var(--text-color); font-weight: bold; font-size: 16px; margin-top: 5px; }
+        body.pencil-theme .detail-item span { font-size: 26px; }
+
+        .retry-btn { display: none; margin: 15px auto 0; background: var(--red); color: white; border: none; padding: 8px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        
+        .forecast-panel { background: var(--forecast-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--card-border); padding: 15px 0; width: 100%; flex-shrink: 0; transition: background 0.3s; padding-bottom: max(15px, env(safe-area-inset-bottom)); }
+        body.pencil-theme .forecast-panel { border-top: 2px dashed var(--card-border); }
+        
+        .forecast-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; padding: 0 20px 10px 20px; font-weight: bold; }
+        body.pencil-theme .forecast-title { font-size: 20px; letter-spacing: 0; text-transform: none; }
+        
+        .forecast-scroll { display: flex; overflow-x: auto; gap: 12px; padding: 0 20px 10px 20px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .forecast-scroll::-webkit-scrollbar { display: none; }
+        
+        .forecast-item { flex: 0 0 auto; width: 75px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 12px 0; text-align: center; scroll-snap-align: start; transition: transform 0.1s; cursor: pointer; position: relative; }
+        
+        body.pencil-theme .forecast-item { 
+            border: 1.5px solid var(--card-border); 
+            border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px; 
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+            background: transparent;
+            background-image: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px);
+        }
+        body.pencil-theme .forecast-item::after {
+            content: '';
+            position: absolute; top: -1px; left: 1px; right: -2px; bottom: 1px;
+            border: 1px solid var(--card-border);
+            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+            opacity: 0.5; pointer-events: none;
+            transform: rotate(-0.5deg);
+        }
+        
+        .fc-day { font-size: 12px; color: var(--text-muted); text-transform: capitalize; margin-bottom: 2px; }
+        body.pencil-theme .fc-day { font-size: 18px; }
+        
+        .fc-date { font-size: 14px; font-weight: bold; margin-bottom: 6px; }
+        body.pencil-theme .fc-date { font-size: 20px; }
+        
+        .fc-icon { font-size: 24px; margin-bottom: 6px; }
+        body.pencil-theme .fc-icon { font-size: 30px; }
+        
+        .fc-temp { font-size: 16px; font-weight: bold; }
+        body.pencil-theme .fc-temp { font-size: 22px; }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); display: none; justify-content: center; align-items: center; z-index: 100; backdrop-filter: blur(5px); opacity: 0; transition: opacity 0.3s; }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        
+        .settings-card { background-color: var(--bg-color); background-image: var(--bg-image); border: 1px solid var(--card-border); border-radius: 24px; width: 90%; max-width: 400px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); display: flex; flex-direction: column; gap: 15px; position: relative; max-height: 85vh; overflow-y: auto; }
+        body.pencil-theme .settings-card { border: 2px solid var(--card-border); border-radius: var(--card-radius); box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.15); background-image: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px); }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: center; }
+        .card-header h2 { font-size: 20px; color: var(--text-color); }
+        body.pencil-theme .card-header h2 { font-size: 28px; }
+        
+        .close-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-color); width: 30px; height: 30px; border-radius: 50%; font-size: 16px; cursor: pointer; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
+        body.pencil-theme .close-btn { border-radius: 10px 100px 10px 100px / 100px 10px 100px 10px; border-width: 2px; }
+
+        .search-input { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid var(--card-border); background: var(--card-bg); color: var(--text-color); font-size: 16px; outline: none; }
+        body.pencil-theme .search-input { font-size: 24px; border-width: 2px; border-radius: 5px 20px 5px 20px / 20px 5px 20px 5px; background: transparent; }
+        
+        .search-results { display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; padding-right: 5px; }
+        .search-result-item { background: var(--card-bg); border: 1px solid var(--card-border); padding: 12px; border-radius: 10px; cursor: pointer; font-size: 14px; }
+        body.pencil-theme .search-result-item { font-size: 22px; border-width: 1.5px; border-radius: 10px 100px 10px 100px / 100px 10px 100px 10px; }
+        
+        .search-result-item .country { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+        body.pencil-theme .search-result-item .country { font-size: 18px; }
+
+        .save-btn { background-color: var(--red); color: white; border: none; padding: 8px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.3s; flex-shrink: 0;}
+        .save-btn.active { opacity: 1; pointer-events: auto; }
+        body.pencil-theme .save-btn { font-size: 22px; background: #a44a3f; border-radius: 5px 15px 5px 15px; border: 1px solid #7a2e2e; }
+        
+        .theme-toggle-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-color); padding: 15px; border-radius: 12px; text-align: left; cursor: pointer; width: 100%; display: flex; flex-direction: column; }
+        body.pencil-theme .theme-toggle-btn { border-width: 2px; border-radius: 5px 20px 5px 20px / 20px 5px 20px 5px; }
+        
+        .theme-toggle-btn .title { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
+        body.pencil-theme .theme-toggle-btn .title { font-size: 24px; }
+        
+        .theme-toggle-btn .subtitle { font-size: 12px; color: var(--text-muted); }
+        body.pencil-theme .theme-toggle-btn .subtitle { font-size: 18px; }
+        
+        .theme-list { display: none; flex-direction: column; gap: 10px; margin-top: 10px; }
+        .theme-list.active { display: flex; }
+        
+        .theme-item { background: var(--card-bg); padding: 15px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid transparent; }
+        body.pencil-theme .theme-item { border: 2px solid transparent; }
+        body.pencil-theme .theme-item.selected { border-color: var(--text-color); }
+        
+        .theme-item .text .title { font-size: 16px; font-weight: 500; color: var(--text-color); }
+        body.pencil-theme .theme-item .text .title { font-size: 24px; }
+        
+        .theme-item .text .subtitle { font-size: 12px; color: var(--text-muted); }
+        body.pencil-theme .theme-item .text .subtitle { font-size: 18px; }
+        
+        .theme-item .check { color: var(--green); font-size: 24px; font-weight: bold; visibility: hidden; }
+        .theme-item.selected .check { visibility: visible; }
+        .loading-text { text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 10px; }
+        body.pencil-theme .loading-text { font-size: 22px; }
+
+        .detail-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+        .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--card-bg); border-radius: 10px; border: 1px solid var(--card-border); }
+        body.pencil-theme .detail-row { border-width: 1.5px; font-size: 22px; border-style: dashed; }
+        
+        .detail-row span { color: var(--text-muted); font-size: 14px; }
+        body.pencil-theme .detail-row span { font-size: 20px; }
+        
+        .detail-row b { color: var(--text-color); font-size: 16px; }
+        body.pencil-theme .detail-row b { font-size: 24px; }
+
+        .hourly-scroll { display: flex; overflow-x: auto; gap: 8px; padding-bottom: 5px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+        .hourly-scroll::-webkit-scrollbar { display: none; }
+        .hourly-item { flex: 0 0 auto; width: 60px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 8px 0; text-align: center; }
+        body.pencil-theme .hourly-item { border-width: 1.5px; border-radius: 10px 50px 10px 50px / 50px 10px 50px 10px; border-style: solid; }
+        
+        .hourly-time { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+        body.pencil-theme .hourly-time { font-size: 18px; }
+        
+        .hourly-icon { font-size: 18px; margin-bottom: 4px; }
+        .hourly-temp { font-size: 13px; font-weight: bold; }
+        body.pencil-theme .hourly-temp { font-size: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo">Meteorawa</div>
+        <div class="status-dot" id="statusDot"></div>
+        <div class="header-actions">
+            <div class="icon-btn" onclick="openSearch()">🔎</div>
+            <div class="icon-btn" onclick="openSettings()">
+                <svg viewBox="0 0 24 24"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.06-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.73,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.06,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.43-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.49-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="weather-card">
+            <div class="card-loc-btn" onclick="getUserLocation()">📳</div>
+            
+            <div class="location" id="currentLocation">...</div>
+            <div class="temperature" id="mainTemp">--°C</div>
+            <div class="condition">
+                <span class="weather-icon" id="weatherIcon">⏳</span>
+                <span class="weather-desc" id="weatherDesc">...</span>
+            </div>
+            <div class="details">
+                <div class="detail-item"><span data-i18n="humidity">Влажность</span> <span id="humidity">--%</span></div>
+                <div class="detail-item"><span data-i18n="wind">Ветер</span> <span id="windSpeed">--</span></div>
+            </div>
+            <button class="retry-btn" id="retryBtn" onclick="retryFetch()" data-i18n="retry">Повторить</button>
+        </div>
+    </div>
+
+    <div class="forecast-panel">
+        <div class="forecast-title" data-i18n="forecast_title">Прогноз на дни</div>
+        <div class="forecast-scroll" id="forecastScroll">
+            <div class="loading-text" style="width:100%; text-align:center; padding: 20px;">...</div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="detailModal" onclick="closeDetailModal(event)">
+        <div class="settings-card" onclick="event.stopPropagation()">
+            <div class="card-header">
+                <h2 id="detailDate">...</h2>
+                <button class="close-btn" onclick="closeDetailModal(event)">X</button>
+            </div>
+            <div style="text-align: center; margin: 5px 0;">
+                <div style="font-size: 50px; line-height: 1;" id="detailIcon">☀️</div>
+                <div style="font-size: 16px; font-weight: bold; margin-top: 5px;" id="detailDesc">...</div>
+            </div>
+            <div class="detail-grid">
+                <div class="detail-row"><span data-i18n="max_temp">Максимальная темп.</span> <b id="detailMax">--°C</b></div>
+                <div class="detail-row"><span data-i18n="min_temp">Минимальная темп.</span> <b id="detailMin">--°C</b></div>
+                <div class="detail-row"><span data-i18n="precip">Осадки за день</span> <b id="detailPrecip">-- мм</b></div>
+            </div>
+            <div style="margin-top: 10px; border-top: 1px solid var(--card-border); padding-top: 10px;">
+                <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;" data-i18n="hourly">Почасовой прогноз</div>
+                <div class="hourly-scroll" id="hourlyForecastScroll"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="searchModal">
+        <div class="settings-card">
+            <div class="card-header">
+                <h2 data-i18n="search_title">Поиск города</h2>
+                <button class="close-btn" onclick="closeSearch()">X</button>
+            </div>
+            <input type="text" id="searchInput" class="search-input" placeholder="..." oninput="handleSearchInput()">
+            <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="settingsModal">
+        <div class="settings-card">
+            <div class="card-header">
+                <h2 data-i18n="settings">Настройки</h2>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <button class="save-btn" id="saveBtn" onclick="saveSettings()" data-i18n="save">Сохранить</button>
+                    <button class="close-btn" onclick="closeSettings()">X</button>
+                </div>
+            </div>
+            
+            <button class="theme-toggle-btn" onclick="toggleList('themeList')">
+                <div class="title" data-i18n="themes">Темы</div>
+                <div class="subtitle" data-i18n="themes_sub">настройки тем</div>
+            </button>
+            <div class="theme-list" id="themeList">
+                <div class="theme-item" id="theme-light" onclick="selectTheme('light')"><div class="text"><div class="title" data-i18n="theme_light">Белая</div></div><div class="check">•</div></div>
+                <div class="theme-item" id="theme-dark" onclick="selectTheme('dark')"><div class="text"><div class="title" data-i18n="theme_dark">Черная</div></div><div class="check">•</div></div>
+                <div class="theme-item" id="theme-pencil" onclick="selectTheme('pencil')"><div class="text"><div class="title" data-i18n="theme_pencil">Карандаш</div></div><div class="check">•</div></div>
+                <div class="theme-item" id="theme-system" onclick="selectTheme('system')"><div class="text"><div class="title" data-i18n="theme_system">Системная</div></div><div class="check">•</div></div>
+            </div>
+
+            <button class="theme-toggle-btn" onclick="toggleList('weatherSettingsList')" style="margin-top: 10px;">
+                <div class="title" data-i18n="weather_settings">Настройки погоды</div>
+                <div class="subtitle" data-i18n="weather_sub">настройки погоды</div>
+            </button>
+            <div class="theme-list" id="weatherSettingsList">
+                <div class="theme-item" onclick="toggleWindUnit()">
+                    <div class="text">
+                        <div class="title" data-i18n="wind_unit">Измерение силы ветра</div>
+                        <div class="subtitle"><span data-i18n="wind_sub">единицы</span> (<span id="windUnitLabel">м/с</span>)</div>
+                    </div>
+                </div>
+                <div class="theme-item" onclick="toggleTempUnit()">
+                    <div class="text">
+                        <div class="title" data-i18n="temp_unit">Единицы температуры</div>
+                        <div class="subtitle"><span data-i18n="temp_sub">единицы</span> (<span id="tempUnitLabel">°C</span>)</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="theme-toggle-btn" onclick="toggleList('langList')" style="margin-top: 10px;">
+                <div class="title" data-i18n="languages">Языки</div>
+                <div class="subtitle" data-i18n="lang_sub">настройки языков для приложения</div>
+            </button>
+            <div class="theme-list" id="langList">
+                <div class="theme-item" id="lang-system" onclick="changeLang('system')"><div class="text"><div class="title" data-i18n="system_lang">Системный</div></div><div class="check">•</div></div>
+                <div class="theme-item" id="lang-ru" onclick="changeLang('ru')"><div class="text"><div class="title">Русский</div></div><div class="check">•</div></div>
+                <div class="theme-item" id="lang-en" onclick="changeLang('en')"><div class="text"><div class="title">English</div></div><div class="check">•</div></div>
+                <div class="theme-item" id="lang-es" onclick="changeLang('es')"><div class="text"><div class="title">Español</div></div><div class="check">•</div></div>
+                <div class="theme-item" id="lang-de" onclick="changeLang('de')"><div class="text"><div class="title">Deutsch</div></div><div class="check">•</div></div>
+                <div class="theme-item" id="lang-fr" onclick="changeLang('fr')"><div class="text"><div class="title">Français</div></div><div class="check">•</div></div>
+                <div class="theme-item" id="lang-zh" onclick="changeLang('zh')"><div class="text"><div class="title">中文</div></div><div class="check">•</div></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const WEATHER_API_KEY = 'ba7bfb2a04f042ab98194932260311'; 
+
+        const i18n = {
+            ru: {
+                humidity: "Влажность", wind: "Ветер", retry: "Повторить", forecast_title: "Прогноз на дни (нажмите)",
+                max_temp: "Максимальная темп.", min_temp: "Минимальная темп.", precip: "Осадки за день", hourly: "Почасовой прогноз",
+                search_title: "Поиск города", settings: "Настройки", save: "Сохранить", themes: "Темы", themes_sub: "настройки тем",
+                theme_light: "Белая тема", theme_dark: "Черная тема", theme_pencil: "Карандашный скетч", theme_system: "Системная тема",
+                weather_settings: "Настройки погоды", weather_sub: "настройки погоды", wind_unit: "Измерение силы ветра", wind_sub: "настройки единицы",
+                temp_unit: "Единицы температуры", temp_sub: "настройки единицы", languages: "Языки", lang_sub: "настройки языков", system_lang: "Системный",
+                m_s: "м/с", km_h: "км/ч", mph: "миль/ч", mm: "мм", today: "Сегодня"
+            },
+            en: {
+                humidity: "Humidity", wind: "Wind", retry: "Retry", forecast_title: "Forecast (tap for details)",
+                max_temp: "Max Temp", min_temp: "Min Temp", precip: "Precipitation", hourly: "Hourly forecast",
+                search_title: "Search City", settings: "Settings", save: "Save", themes: "Themes", themes_sub: "theme settings",
+                theme_light: "Light Theme", theme_dark: "Dark Theme", theme_pencil: "Pencil Sketch", theme_system: "System Theme",
+                weather_settings: "Weather Settings", weather_sub: "weather settings", wind_unit: "Wind Speed Unit", wind_sub: "wind settings",
+                temp_unit: "Temperature Unit", temp_sub: "temp settings", languages: "Languages", lang_sub: "app language settings", system_lang: "System",
+                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Today"
+            },
+            es: {
+                humidity: "Humedad", wind: "Viento", retry: "Reintentar", forecast_title: "Pronóstico (toca para detalles)",
+                max_temp: "Temp. Máx", min_temp: "Temp. Mín", precip: "Precipitación", hourly: "Pronóstico por horas",
+                search_title: "Buscar Ciudad", settings: "Ajustes", save: "Guardar", themes: "Temas", themes_sub: "ajustes de tema",
+                theme_light: "Tema Claro", theme_dark: "Tema Oscuro", theme_pencil: "Lápiz", theme_system: "Tema Sistema",
+                weather_settings: "Ajustes del Clima", weather_sub: "ajustes del clima", wind_unit: "Unidad de Viento", wind_sub: "ajustes de viento",
+                temp_unit: "Unidad de Temperatura", temp_sub: "ajustes de temp", languages: "Idiomas", lang_sub: "idioma de la app", system_lang: "Sistema",
+                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Hoy"
+            },
+            de: {
+                humidity: "Luftfeuchtigkeit", wind: "Wind", retry: "Wiederholen", forecast_title: "Vorhersage (tippen für Details)",
+                max_temp: "Max Temp", min_temp: "Min Temp", precip: "Niederschlag", hourly: "Stündliche Vorhersage",
+                search_title: "Stadt suchen", settings: "Einstellungen", save: "Speichern", themes: "Designs", themes_sub: "Design-Einstellungen",
+                theme_light: "Helles Design", theme_dark: "Dunkles Design", theme_pencil: "Bleistift", theme_system: "System-Design",
+                weather_settings: "Wetter-Einstellungen", weather_sub: "Wetter-Einstellungen", wind_unit: "Windgeschwindigkeit", wind_sub: "Wind-Einstellungen",
+                temp_unit: "Temperatureinheit", temp_sub: "Temp-Einstellungen", languages: "Sprachen", lang_sub: "Sprache der App", system_lang: "System",
+                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Heute"
+            },
+            fr: {
+                humidity: "Humidité", wind: "Vent", retry: "Réessayer", forecast_title: "Prévisions (toucher pour détails)",
+                max_temp: "Temp Max", min_temp: "Temp Min", precip: "Précipitations", hourly: "Prévisions horaires",
+                search_title: "Chercher une ville", settings: "Paramètres", save: "Enregistrer", themes: "Thèmes", themes_sub: "paramètres de thème",
+                theme_light: "Thème Clair", theme_dark: "Thème Sombre", theme_pencil: "Crayon", theme_system: "Thème Système",
+                weather_settings: "Paramètres Météo", weather_sub: "paramètres météo", wind_unit: "Unité de vent", wind_sub: "paramètres de vent",
+                temp_unit: "Unité de température", temp_sub: "paramètres de temp", languages: "Langues", lang_sub: "langue de l'app", system_lang: "Système",
+                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Aujourd'hui"
+            },
+            zh: {
+                humidity: "湿度", wind: "风速", retry: "重试", forecast_title: "未来预报 (点击详情)",
+                max_temp: "最高温", min_temp: "最低温", precip: "降水量", hourly: "逐小时预报",
+                search_title: "搜索城市", settings: "设置", save: "保存", themes: "主题", themes_sub: "主题设置",
+                theme_light: "浅色主题", theme_dark: "深色主题", theme_pencil: "铅笔素描", theme_system: "系统主题",
+                weather_settings: "天气设置", weather_sub: "天气设置", wind_unit: "风速单位", wind_sub: "风速设置",
+                temp_unit: "温度单位", temp_sub: "温度设置", languages: "语言", lang_sub: "应用语言设置", system_lang: "系统",
+                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "今天"
+            }
+        };
+
+        let currentLang = 'ru';
+        let sysLang = navigator.language.split('-')[0] || 'en';
+        if (!i18n[sysLang]) sysLang = 'en';
+
+        let lastWeatherData = null; 
+        let currentWindUnit = 'm/s'; 
+        let currentTempUnit = 'C';
+        let currentLat = 55.7558;
+        let currentLon = 37.6173;
+        let currentCity = "Москва";
+
+        function getUserLocation() {
+            if (navigator.geolocation) {
+                document.getElementById('currentLocation').innerText = 'Определение...';
+                document.getElementById('mainTemp').innerText = '...';
+                document.getElementById('weatherDesc').innerText = '...';
+                document.getElementById('weatherIcon').innerText = '📳';
+                
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const lat = position.coords.latitude;
+                        const lon = position.coords.longitude;
+                        currentLat = lat;
+                        currentLon = lon;
+                        currentCity = "Мое местоположение";
+                        fetchWeather(lat, lon, "Мое местоположение");
+                    },
+                    (error) => {
+                        console.error("Ошибка геолокации:", error);
+                        alert("Не удалось определить местоположение. Разрешите доступ к GPS в настройках приложения.");
+                        if (lastWeatherData) {
+                            renderWeatherDisplay();
+                            document.getElementById('currentLocation').innerText = currentCity;
+                        } else {
+                            fetchWeather(55.7558, 37.6173, "Москва");
+                        }
+                    },
+                    { timeout: 10000, maximumAge: 60000 }
+                );
+            } else {
+                alert("Ваш браузер не поддерживает геолокацию.");
+            }
+        }
+
+        function updateUILanguage() {
+            const lang = currentLang === 'system' ? sysLang : currentLang;
+            document.documentElement.lang = lang;
+            
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[lang] && i18n[lang][key]) el.innerText = i18n[lang][key];
+            });
+            
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) searchInput.placeholder = lang === 'ru' ? 'Введите город...' : 'Enter city...';
+            
+            const wl = document.getElementById('windUnitLabel');
+            if (wl) wl.innerText = i18n[lang][currentWindUnit === 'm/s' ? 'm_s' : (currentWindUnit === 'km/h' ? 'km_h' : 'mph')];
+            
+            const tl = document.getElementById('tempUnitLabel');
+            if (tl) tl.innerText = currentTempUnit === 'C' ? '°C' : '°F';
+
+            if (lastWeatherData) renderWeatherDisplay();
+        }
+
+        function changeLang(langCode) {
+            currentLang = langCode;
+            document.querySelectorAll('#langList .theme-item').forEach(el => el.classList.remove('selected'));
+            document.getElementById('lang-' + langCode).classList.add('selected');
+            updateUILanguage();
+            
+            if (currentLat && currentLon) {
+                fetchWeather(currentLat, currentLon, currentCity);
+            }
+        }
+
+        function formatTemp(celsius) {
+            if (celsius === undefined || celsius === null) return '--°';
+            if (currentTempUnit === 'C') return `${Math.round(celsius)}°C`;
+            return `${Math.round(celsius * 9/5 + 32)}°F`;
+        }
+
+        function formatWind(mps) {
+            if (mps === undefined || mps === null) return '--';
+            const lang = currentLang === 'system' ? sysLang : currentLang;
+            const unitText = i18n[lang][currentWindUnit === 'm/s' ? 'm_s' : (currentWindUnit === 'km/h' ? 'km_h' : 'mph')];
+            
+            if (currentWindUnit === 'm/s') return `${Math.round(mps)} ${unitText}`;
+            if (currentWindUnit === 'km/h') return `${Math.round(mps * 3.6)} ${unitText}`;
+            return `${Math.round(mps * 2.23694)} ${unitText}`;
+        }
+
+        function toggleWindUnit() {
+            if (currentWindUnit === 'm/s') currentWindUnit = 'km/h';
+            else if (currentWindUnit === 'km/h') currentWindUnit = 'mph';
+            else currentWindUnit = 'm/s';
+            updateUILanguage();
+        }
+
+        function toggleTempUnit() {
+            currentTempUnit = currentTempUnit === 'C' ? 'F' : 'C';
+            updateUILanguage();
+        }
+
+        function getWeatherIcon(code, isDay) {
+            const c = parseInt(code);
+            if (c === 1000) return isDay ? '☀️' : '🌙'; 
+            if (c === 1003) return isDay ? '🌤️' : '☁️'; 
+            if (c === 1006 || c === 1009) return '☁️'; 
+            if (c === 1030 || c === 1135 || c === 1147) return '🌫️'; 
+            if ([1063, 1150, 1153, 1168, 1171, 1180, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246].includes(c)) return '🌧️';
+            if ([1066, 1069, 1114, 1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1237, 1249, 1252, 1255, 1258, 1261, 1264].includes(c)) return '🌨️';
+            if ([1072, 1198, 1201].includes(c)) return '🌧️'; 
+            if ([1087, 1273, 1276, 1279, 1282].includes(c)) return '⛈️'; 
+            return '☁️';
+        }
+
+        let selectedTheme = null;
+        function openSettings() { document.getElementById('settingsModal').classList.add('active'); }
+        function closeSettings() { document.getElementById('settingsModal').classList.remove('active'); }
+        function toggleList(id) { document.getElementById(id).classList.toggle('active'); }
+        
+        function selectTheme(theme) { 
+            selectedTheme = theme; 
+            document.querySelectorAll('#themeList .theme-item').forEach(el => el.classList.remove('selected')); 
+            document.getElementById('theme-' + theme).classList.add('selected'); 
+            document.getElementById('saveBtn').classList.add('active'); 
+        }
+        function saveSettings() { 
+            document.body.classList.remove('light-theme', 'pencil-theme'); 
+            if (selectedTheme === 'light') document.body.classList.add('light-theme'); 
+            else if (selectedTheme === 'pencil') document.body.classList.add('pencil-theme'); 
+            closeSettings(); 
+        }
+
+        let searchTimeout = null;
+        function openSearch() { document.getElementById('searchModal').classList.add('active'); document.getElementById('searchInput').focus(); }
+        function closeSearch() { document.getElementById('searchModal').classList.remove('active'); document.getElementById('searchResults').innerHTML = ''; document.getElementById('searchInput').value = ''; }
+
+        function handleSearchInput() {
+            clearTimeout(searchTimeout);
+            const query = document.getElementById('searchInput').value.trim();
+            const resultsContainer = document.getElementById('searchResults');
+            const lang = currentLang === 'system' ? sysLang : currentLang;
+
+            if (query.length < 3) { resultsContainer.innerHTML = '<div class="loading-text">...</div>'; return; }
+            resultsContainer.innerHTML = '<div class="loading-text">...</div>';
+
+            searchTimeout = setTimeout(() => {
+                fetch(`https://api.weatherapi.com/v1/search.json?key=${WE
