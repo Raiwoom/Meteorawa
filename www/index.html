@@ -318,6 +318,10 @@
     </div>
 
     <script>
+        // === VISUAL CROSSING API (БЕЗ КЛЮЧА) ===
+        // Работает без регистрации и ключей. Если лимиты будут исчерпаны, 
+        // можно зарегистрироваться на visualcrossing.com и добавить ключ.
+
         const i18n = {
             ru: {
                 humidity: "Влажность", wind: "Ветер", retry: "Повторить", forecast_title: "Прогноз на 15 дней (нажмите)",
@@ -328,14 +332,7 @@
                 temp_unit: "Единицы температуры", temp_sub: "настройки единицы", languages: "Языки", lang_sub: "настройки языков", system_lang: "Системный",
                 m_s: "м/с", km_h: "км/ч", mph: "миль/ч", mm: "мм", today: "Сегодня",
                 feedback_title: "Обратная связь", feedback_question: "Верный ли прогноз?", yes: "Да", no: "Нет",
-                thanks_yes: "Отлично! Спасибо за отзыв.", thanks_no: "Спасибо, мы постараемся улучшить прогнозы!",
-                weather_map: {
-                    0: 'Ясно', 1: 'Преимущественно ясно', 2: 'Переменная облачность', 3: 'Пасмурно',
-                    45: 'Туман', 48: 'Туман', 51: 'Морось', 53: 'Морось', 55: 'Морось',
-                    61: 'Дождь', 63: 'Дождь', 65: 'Ливень', 71: 'Снег', 73: 'Снег', 75: 'Снегопад',
-                    77: 'Снег', 80: 'Ливень', 81: 'Ливень', 82: 'Сильный ливень', 85: 'Снегопад',
-                    86: 'Снегопад', 95: 'Гроза', 96: 'Гроза', 99: 'Гроза'
-                }
+                thanks_yes: "Отлично! Спасибо за отзыв.", thanks_no: "Спасибо, мы постараемся улучшить прогнозы!"
             },
             en: {
                 humidity: "Humidity", wind: "Wind", retry: "Retry", forecast_title: "15-day Forecast (tap for details)",
@@ -346,19 +343,12 @@
                 temp_unit: "Temperature Unit", temp_sub: "temp settings", languages: "Languages", lang_sub: "app language settings", system_lang: "System",
                 m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Today",
                 feedback_title: "Feedback", feedback_question: "Is the forecast correct?", yes: "Yes", no: "No",
-                thanks_yes: "Great! Thanks for the feedback.", thanks_no: "Thanks, we will try to improve!",
-                weather_map: {
-                    0: 'Clear', 1: 'Mainly Clear', 2: 'Partly Cloudy', 3: 'Overcast',
-                    45: 'Fog', 48: 'Fog', 51: 'Drizzle', 53: 'Drizzle', 55: 'Drizzle',
-                    61: 'Rain', 63: 'Rain', 65: 'Heavy Rain', 71: 'Snow', 73: 'Snow', 75: 'Heavy Snow',
-                    77: 'Snow', 80: 'Showers', 81: 'Showers', 82: 'Heavy Showers', 85: 'Snow Showers',
-                    86: 'Snow Showers', 95: 'Thunderstorm', 96: 'Thunderstorm', 99: 'Thunderstorm'
-                }
+                thanks_yes: "Great! Thanks for the feedback.", thanks_no: "Thanks, we will try to improve!"
             },
-            es: { humidity: "Humedad", wind: "Viento", retry: "Reintentar", forecast_title: "Pronóstico 15 días (toca detalles)", max_temp: "Máx", min_temp: "Mín", precip: "Precipitación", hourly: "Por horas", search_title: "Buscar Ciudad", settings: "Ajustes", save: "Guardar", themes: "Temas", themes_sub: "ajustes", theme_light: "Claro", theme_dark: "Oscuro", theme_pencil: "Lápiz", theme_system: "Sistema", weather_settings: "Ajustes Clima", weather_sub: "ajustes", wind_unit: "Unidad Viento", wind_sub: "viento", temp_unit: "Unidad Temp", temp_sub: "temp", languages: "Idiomas", lang_sub: "idioma", system_lang: "Sistema", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Hoy", feedback_title: "Comentarios", feedback_question: "¿Pronóstico correcto?", yes: "Sí", no: "No", thanks_yes: "¡Genial! Gracias.", thanks_no: "¡Gracias, mejoraremos!", weather_map: {0:'Despejado',1:'Mayormente Despejado',2:'Parcialmente Nublado',3:'Cubierto',45:'Niebla',48:'Niebla',51:'Llovizna',53:'Llovizna',55:'Llovizna',61:'Lluvia',63:'Lluvia',65:'Lluvia Fuerte',71:'Nieve',73:'Nieve',75:'Nevada',77:'Nieve',80:'Chubascos',81:'Chubascos',82:'Chubascos Fuertes',85:'Nevada',86:'Nevada',95:'Tormenta',96:'Tormenta',99:'Tormenta'} },
-            de: { humidity: "Luftfeuchtigkeit", wind: "Wind", retry: "Wiederholen", forecast_title: "15-Tage-Vorhersage (tippen)", max_temp: "Max Temp", min_temp: "Min Temp", precip: "Niederschlag", hourly: "Stündlich", search_title: "Stadt suchen", settings: "Einstellungen", save: "Speichern", themes: "Designs", themes_sub: "Design", theme_light: "Hell", theme_dark: "Dunkel", theme_pencil: "Bleistift", theme_system: "System", weather_settings: "Wetter-Einstellungen", weather_sub: "Wetter", wind_unit: "Windgeschwindigkeit", wind_sub: "Wind", temp_unit: "Temperatureinheit", temp_sub: "Temp", languages: "Sprachen", lang_sub: "Sprache", system_lang: "System", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Heute", feedback_title: "Feedback", feedback_question: "Ist die Vorhersage korrekt?", yes: "Ja", no: "Nein", thanks_yes: "Super! Danke.", thanks_no: "Danke, wir verbessern uns!", weather_map: {0:'Klar',1:'Meistens Klar',2:'Teilweise Bewölkt',3:'Bedeckt',45:'Nebel',48:'Nebel',51:'Nieselregen',53:'Nieselregen',55:'Nieselregen',61:'Regen',63:'Regen',65:'Starker Regen',71:'Schnee',73:'Schnee',75:'Schneefall',77:'Schnee',80:'Schauer',81:'Schauer',82:'Starke Schauer',85:'Schneeschauer',86:'Schneeschauer',95:'Gewitter',96:'Gewitter',99:'Gewitter'} },
-            fr: { humidity: "Humidité", wind: "Vent", retry: "Réessayer", forecast_title: "Prévisions 15 jours (toucher)", max_temp: "Temp Max", min_temp: "Temp Min", precip: "Précipitations", hourly: "Horaire", search_title: "Chercher une ville", settings: "Paramètres", save: "Enregistrer", themes: "Thèmes", themes_sub: "thème", theme_light: "Clair", theme_dark: "Sombre", theme_pencil: "Crayon", theme_system: "Système", weather_settings: "Paramètres Météo", weather_sub: "météo", wind_unit: "Unité de vent", wind_sub: "vent", temp_unit: "Unité de température", temp_sub: "temp", languages: "Langues", lang_sub: "langue", system_lang: "Système", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Aujourd'hui", feedback_title: "Commentaires", feedback_question: "La prévision est-elle correcte ?", yes: "Oui", no: "Non", thanks_yes: "Génial ! Merci.", thanks_no: "Merci, nous améliorerons !", weather_map: {0:'Dégagé',1:'Plutôt Dégagé',2:'Partiellement Nuageux',3:'Couvert',45:'Brouillard',48:'Brouillard',51:'Bruine',53:'Bruine',55:'Bruine',61:'Pluie',63:'Pluie',65:'Forte Pluie',71:'Neige',73:'Neige',75:'Neige',77:'Neige',80:'Averses',81:'Averses',82:'Fortes Averses',85:'Averses de Neige',86:'Averses de Neige',95:'Orage',96:'Orage',99:'Orage'} },
-            zh: { humidity: "湿度", wind: "风速", retry: "重试", forecast_title: "15天预报 (点击详情)", max_temp: "最高温", min_temp: "最低温", precip: "降水量", hourly: "逐小时", search_title: "搜索城市", settings: "设置", save: "保存", themes: "主题", themes_sub: "主题", theme_light: "浅色", theme_dark: "深色", theme_pencil: "铅笔", theme_system: "系统", weather_settings: "天气设置", weather_sub: "天气", wind_unit: "风速单位", wind_sub: "风速", temp_unit: "温度单位", temp_sub: "温度", languages: "语言", lang_sub: "语言", system_lang: "系统", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "今天", feedback_title: "反馈", feedback_question: "预报准确吗？", yes: "是的", no: "不是", thanks_yes: "太好了！感谢您的反馈。", thanks_no: "谢谢，我们会努力改进！", weather_map: {0:'晴',1:'主要晴朗',2:'局部多云',3:'阴',45:'雾',48:'雾',51:'毛毛雨',53:'毛毛雨',55:'毛毛雨',61:'雨',63:'雨',65:'大雨',71:'雪',73:'雪',75:'大雪',77:'雪',80:'阵雨',81:'阵雨',82:'强阵雨',85:'阵雪',86:'阵雪',95:'雷暴',96:'雷暴',99:'雷暴'} }
+            es: { humidity: "Humedad", wind: "Viento", retry: "Reintentar", forecast_title: "Pronóstico 15 días (toca detalles)", max_temp: "Máx", min_temp: "Mín", precip: "Precipitación", hourly: "Por horas", search_title: "Buscar Ciudad", settings: "Ajustes", save: "Guardar", themes: "Temas", themes_sub: "ajustes", theme_light: "Claro", theme_dark: "Oscuro", theme_pencil: "Lápiz", theme_system: "Sistema", weather_settings: "Ajustes Clima", weather_sub: "ajustes", wind_unit: "Unidad Viento", wind_sub: "viento", temp_unit: "Unidad Temp", temp_sub: "temp", languages: "Idiomas", lang_sub: "idioma", system_lang: "Sistema", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Hoy", feedback_title: "Comentarios", feedback_question: "¿Pronóstico correcto?", yes: "Sí", no: "No", thanks_yes: "¡Genial! Gracias.", thanks_no: "¡Gracias, mejoraremos!" },
+            de: { humidity: "Luftfeuchtigkeit", wind: "Wind", retry: "Wiederholen", forecast_title: "15-Tage-Vorhersage (tippen)", max_temp: "Max Temp", min_temp: "Min Temp", precip: "Niederschlag", hourly: "Stündlich", search_title: "Stadt suchen", settings: "Einstellungen", save: "Speichern", themes: "Designs", themes_sub: "Design", theme_light: "Hell", theme_dark: "Dunkel", theme_pencil: "Bleistift", theme_system: "System", weather_settings: "Wetter-Einstellungen", weather_sub: "Wetter", wind_unit: "Windgeschwindigkeit", wind_sub: "Wind", temp_unit: "Temperatureinheit", temp_sub: "Temp", languages: "Sprachen", lang_sub: "Sprache", system_lang: "System", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Heute", feedback_title: "Feedback", feedback_question: "Ist die Vorhersage korrekt?", yes: "Ja", no: "Nein", thanks_yes: "Super! Danke.", thanks_no: "Danke, wir verbessern uns!" },
+            fr: { humidity: "Humidité", wind: "Vent", retry: "Réessayer", forecast_title: "Prévisions 15 jours (toucher)", max_temp: "Temp Max", min_temp: "Temp Min", precip: "Précipitations", hourly: "Horaire", search_title: "Chercher une ville", settings: "Paramètres", save: "Enregistrer", themes: "Thèmes", themes_sub: "thème", theme_light: "Clair", theme_dark: "Sombre", theme_pencil: "Crayon", theme_system: "Système", weather_settings: "Paramètres Météo", weather_sub: "météo", wind_unit: "Unité de vent", wind_sub: "vent", temp_unit: "Unité de température", temp_sub: "temp", languages: "Langues", lang_sub: "langue", system_lang: "Système", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Aujourd'hui", feedback_title: "Commentaires", feedback_question: "La prévision est-elle correcte ?", yes: "Oui", no: "Non", thanks_yes: "Génial ! Merci.", thanks_no: "Merci, nous améliorerons !" },
+            zh: { humidity: "湿度", wind: "风速", retry: "重试", forecast_title: "15天预报 (点击详情)", max_temp: "最高温", min_temp: "最低温", precip: "降水量", hourly: "逐小时", search_title: "搜索城市", settings: "设置", save: "保存", themes: "主题", themes_sub: "主题", theme_light: "浅色", theme_dark: "深色", theme_pencil: "铅笔", theme_system: "系统", weather_settings: "天气设置", weather_sub: "天气", wind_unit: "风速单位", wind_sub: "风速", temp_unit: "温度单位", temp_sub: "温度", languages: "语言", lang_sub: "语言", system_lang: "系统", m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "今天", feedback_title: "反馈", feedback_question: "预报准确吗？", yes: "是的", no: "不是", thanks_yes: "太好了！感谢您的反馈。", thanks_no: "谢谢，我们会努力改进！" }
         };
 
         let currentLang = 'ru';
@@ -456,14 +446,19 @@
             updateUILanguage();
         }
 
-        function getWeatherIcon(code) {
-            if (code === 0) return '☀️';
-            if (code === 1 || code === 2) return '🌤️';
-            if (code === 3) return '☁️';
-            if (code === 45 || code === 48) return '🌫️';
-            if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return '🌧️';
-            if ([71, 73, 75, 77, 85, 86].includes(code)) return '🌨️';
-            if ([95, 96, 99].includes(code)) return '⛈️';
+        function getVCWeatherIcon(icon) {
+            if (!icon) return '☁️';
+            if (icon.includes('clear-day')) return '☀️';
+            if (icon.includes('clear-night')) return '🌙';
+            if (icon.includes('partly-cloudy-day')) return '🌤️';
+            if (icon.includes('partly-cloudy-night')) return '☁️';
+            if (icon.includes('cloudy')) return '☁️';
+            if (icon.includes('rain')) return '🌧️';
+            if (icon.includes('showers-day')) return '🌦️';
+            if (icon.includes('snow')) return '🌨️';
+            if (icon.includes('fog')) return '🌫️';
+            if (icon.includes('wind')) return '💨';
+            if (icon.includes('thunder')) return '⛈️';
             return '☁️';
         }
 
@@ -523,31 +518,28 @@
 
         function renderWeatherDisplay() {
             try {
-                if (!lastWeatherData || !lastWeatherData.current) throw new Error("No data");
-                const current = lastWeatherData.current;
-                const daily = lastWeatherData.daily;
+                if (!lastWeatherData || !lastWeatherData.currentConditions) throw new Error("No data");
+                const current = lastWeatherData.currentConditions;
+                const days = lastWeatherData.days;
                 const lang = currentLang === 'system' ? sysLang : currentLang;
                 const locale = lang === 'zh' ? 'zh-CN' : (lang === 'ru' ? 'ru-RU' : lang);
 
-                // Текущая погода
-                document.getElementById('mainTemp').innerText = formatTemp(current.temperature_2m);
-                document.getElementById('humidity').innerText = `${current.relative_humidity_2m}%`;
-                document.getElementById('windSpeed').innerText = formatWind(current.wind_speed_10m);
+                document.getElementById('mainTemp').innerText = formatTemp(current.temp);
+                document.getElementById('humidity').innerText = `${current.humidity}%`;
+                document.getElementById('windSpeed').innerText = formatWind(current.windspeed / 3.6);
                 
-                const currentIcon = getWeatherIcon(current.weather_code);
-                document.getElementById('weatherIcon').innerText = currentIcon;
-                document.getElementById('weatherDesc').innerText = i18n[lang].weather_map[current.weather_code] || 'Облачно';
+                document.getElementById('weatherIcon').innerText = getVCWeatherIcon(current.icon);
+                document.getElementById('weatherDesc').innerText = current.conditions;
 
-                // Прогноз на 15 дней
                 const forecastScroll = document.getElementById('forecastScroll');
                 forecastScroll.innerHTML = ''; 
                 
-                for (let i = 0; i < daily.time.length; i++) {
-                    const dateObj = new Date(daily.time[i]);
+                for (let i = 0; i < days.length; i++) {
+                    const dateObj = new Date(days[i].datetime);
                     const dayName = i === 0 ? i18n[lang].today : dateObj.toLocaleDateString(locale, { weekday: 'short' });
                     const dayNum = dateObj.toLocaleDateString(locale, { day: 'numeric', month: 'short' });
-                    const infoIcon = getWeatherIcon(daily.weather_code[i]);
-                    const temp = daily.temperature_2m_max[i];
+                    const infoIcon = getVCWeatherIcon(days[i].icon);
+                    const temp = days[i].tempmax;
 
                     const div = document.createElement('div');
                     div.className = 'forecast-item';
@@ -575,11 +567,11 @@
             document.getElementById('retryBtn').style.display = 'none';
 
             try {
-                // Запрос к Open-Meteo на 16 дней
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&hourly=temperature_2m,weather_code&timezone=auto&forecast_days=16`;
+                // Запрос к Visual Crossing без ключа
+                const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}?unitGroup=metric&include=current,days&contentType=json`;
                 const res = await fetch(url);
                 
-                if (!res.ok) throw new Error("Ошибка сервера Open-Meteo");
+                if (!res.ok) throw new Error("Ошибка сервера Visual Crossing.");
 
                 lastWeatherData = await res.json();
                 renderWeatherDisplay();
@@ -590,7 +582,7 @@
                 document.getElementById('weatherDesc').innerText = "Ошибка"; 
                 document.getElementById('weatherIcon').innerText = '⚠️';
                 document.getElementById('retryBtn').style.display = 'block';
-                document.getElementById('forecastScroll').innerHTML = `<div class="loading-text" style="color:var(--red)">Проверьте интернет</div>`;
+                document.getElementById('forecastScroll').innerHTML = `<div class="loading-text" style="color:var(--red)">${error.message}</div>`;
             }
         }
 
@@ -600,12 +592,11 @@
 
         function showDailyDetail(index) {
             if (!lastWeatherData) return;
-            const daily = lastWeatherData.daily;
-            const hourly = lastWeatherData.hourly;
+            const dayData = lastWeatherData.days[index];
             const lang = currentLang === 'system' ? sysLang : currentLang;
             const locale = lang === 'zh' ? 'zh-CN' : (lang === 'ru' ? 'ru-RU' : lang);
 
-            const targetDate = daily.time[index];
+            const targetDate = dayData.datetime;
             const dateObj = new Date(targetDate);
             const dateString = dateObj.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
             
@@ -614,35 +605,30 @@
                 : dateString;
 
             document.getElementById('detailDate').innerText = detailTitle;
-            document.getElementById('detailIcon').innerText = getWeatherIcon(daily.weather_code[index]);
-            document.getElementById('detailDesc').innerText = i18n[lang].weather_map[daily.weather_code[index]] || 'Облачно';
-            document.getElementById('detailMax').innerText = formatTemp(daily.temperature_2m_max[index]);
-            document.getElementById('detailMin').innerText = formatTemp(daily.temperature_2m_min[index]);
-            document.getElementById('detailPrecip').innerText = `${daily.precipitation_sum[index]} ${i18n[lang].mm}`;
+            document.getElementById('detailIcon').innerText = getVCWeatherIcon(dayData.icon);
+            document.getElementById('detailDesc').innerText = dayData.conditions;
+            document.getElementById('detailMax').innerText = formatTemp(dayData.tempmax);
+            document.getElementById('detailMin').innerText = formatTemp(dayData.tempmin);
+            document.getElementById('detailPrecip').innerText = `${dayData.precip} ${i18n[lang].mm}`;
 
-            // Почасовой прогноз
             const hourlyContainer = document.getElementById('hourlyForecastScroll');
             hourlyContainer.innerHTML = '';
 
             const currentHour = new Date().getHours();
 
-            for (let i = 0; i < hourly.time.length; i++) {
-                const hourTime = hourly.time[i];
-                if (hourTime.startsWith(targetDate)) {
-                    const hourDate = new Date(hourTime);
-                    const hour = hourDate.getHours();
+            if (dayData.hours) {
+                for (let i = 0; i < dayData.hours.length; i++) {
+                    const hourData = dayData.hours[i];
+                    const hour = parseInt(hourData.datetime.split(':')[0]);
                     
-                    // Для сегодняшнего дня показываем только будущие часы (или текущий)
                     if (index === 0 && hour < currentHour) continue;
-
-                    // Берем каждый 3-й час (00, 03, 06, 09...)
                     if (hour % 3 === 0) {
                         const hDiv = document.createElement('div');
                         hDiv.className = 'hourly-item';
                         hDiv.innerHTML = `
-                            <div class="hourly-time">${hourDate.toLocaleTimeString(locale, {hour: '2-digit', minute:'2-digit'})}</div>
-                            <div class="hourly-icon">${getWeatherIcon(hourly.weather_code[i])}</div>
-                            <div class="hourly-temp">${formatTemp(hourly.temperature_2m[i])}</div>
+                            <div class="hourly-time">${hourData.datetime.substring(0, 5)}</div>
+                            <div class="hourly-icon">${getVCWeatherIcon(hourData.icon)}</div>
+                            <div class="hourly-temp">${formatTemp(hourData.temp)}</div>
                         `;
                         hourlyContainer.appendChild(hDiv);
                     }
