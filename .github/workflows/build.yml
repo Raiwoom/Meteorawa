@@ -1,0 +1,59 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Клонируем ваш код из репозитория
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2. Устанавливаем Node.js (нужен для Capacitor)
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    # 3. Устанавливаем Java 17 (нужен для сборки Android)
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '17'
+
+    # 4. Устанавливаем зависимости
+    - name: Install dependencies
+      run: npm install
+
+    # 5. Добавляем нативную платформу Android
+    - name: Add Android platform
+      run: npx cap add android
+
+    # 6. Копируем наш HTML/CSS/JS в нативное приложение
+    - name: Sync web assets
+      run: npx cap sync
+
+    # 7. ДОБАВЛЯЕМ РАЗРЕШЕНИЯ (Интернет и GPS)
+    - name: Add permissions to AndroidManifest
+      run: |
+        sed -i '/<application/i \    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\n    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />' android/app/src/main/AndroidManifest.xml
+
+    # 8. Собираем APK
+    - name: Build APK
+      run: |
+        cd android
+        chmod +x gradlew
+        ./gradlew assembleDebug
+
+    # 9. Загружаем готовый APK обратно на GitHub
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: Meteorawa-APK
+        path: android/app/build/outputs/apk/debug/app-debug.apk
