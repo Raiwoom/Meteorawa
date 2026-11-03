@@ -205,7 +205,7 @@
     </div>
 
     <div class="forecast-panel">
-        <div class="forecast-title" data-i18n="forecast_title">Прогноз на дни</div>
+        <div class="forecast-title" data-i18n="forecast_title">Прогноз на 15 дней</div>
         <div class="forecast-scroll" id="forecastScroll">
             <div class="loading-text" style="width:100%; text-align:center; padding: 20px;">...</div>
         </div>
@@ -499,7 +499,6 @@
             resultsContainer.innerHTML = '<div class="loading-text">...</div>';
 
             searchTimeout = setTimeout(() => {
-                // Поиск через Open-Meteo Geocoding
                 fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=5&language=${lang}&format=json`)
                 .then(res => res.json())
                 .then(data => {
@@ -527,7 +526,6 @@
                 if (!lastWeatherData || !lastWeatherData.current) throw new Error("No data");
                 const current = lastWeatherData.current;
                 const daily = lastWeatherData.daily;
-                const hourly = lastWeatherData.hourly;
                 const lang = currentLang === 'system' ? sysLang : currentLang;
                 const locale = lang === 'zh' ? 'zh-CN' : (lang === 'ru' ? 'ru-RU' : lang);
 
