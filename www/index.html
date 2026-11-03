@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Meteorawa</title>
-    <!-- Подключаем рукописный шрифт для карандашной темы -->
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
@@ -22,37 +21,19 @@
             --forecast-bg: rgba(255, 255, 255, 0.6);
         }
         
-        /* === НАСТОЯЩАЯ КАРАНДАШНАЯ ТЕМА === */
         body.pencil-theme {
-            --bg-color: #fcfbf7; 
-            --text-color: #2c2c2c; 
-            --text-muted: #6a6a6a;
-            --card-bg: transparent; 
-            --card-border: #4a4a4a;
-            --icon-color: #2c2c2c;
-            --green: #4a7c59;
+            --bg-color: #fcfbf7; --text-color: #2c2c2c; --text-muted: #6a6a6a;
+            --card-bg: transparent; --card-border: #4a4a4a;
+            --icon-color: #2c2c2c; --green: #4a7c59;
             --card-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
             --forecast-bg: rgba(252, 251, 247, 0.95);
             --bg-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
             font-family: 'Caveat', 'Comic Sans MS', cursive; 
         }
 
-        body.pencil-theme * {
-            font-family: 'Caveat', 'Comic Sans MS', cursive !important;
-        }
-
-        body.pencil-theme .weather-icon,
-        body.pencil-theme .fc-icon,
-        body.pencil-theme .hourly-icon {
-            filter: grayscale(100%) contrast(150%) sepia(10%);
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-        }
-
-        body.pencil-theme .status-dot {
-            background-color: var(--green);
-            box-shadow: 1px 1px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(255,255,255,0.5);
-            border: 1px solid var(--text-color);
-        }
+        body.pencil-theme * { font-family: 'Caveat', 'Comic Sans MS', cursive !important; }
+        body.pencil-theme .weather-icon, body.pencil-theme .fc-icon, body.pencil-theme .hourly-icon { filter: grayscale(100%) contrast(150%) sepia(10%); text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        body.pencil-theme .status-dot { background-color: var(--green); box-shadow: 1px 1px 0px rgba(0,0,0,0.2), inset -1px -1px 0px rgba(255,255,255,0.5); border: 1px solid var(--text-color); }
         body.pencil-theme .status-dot.yellow { background-color: #d4a373; border-color: #b5835a; }
         body.pencil-theme .status-dot.red { background-color: #a44a3f; border-color: #7a2e2e; }
 
@@ -77,67 +58,19 @@
         .header-actions { margin-left: auto; display: flex; gap: 10px; }
         .icon-btn { width: 45px; height: 45px; border-radius: 50%; background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid var(--card-border); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s; font-size: 20px; color: var(--icon-color); user-select: none; }
         .icon-btn:active { background: rgba(128, 128, 128, 0.2); }
-        
-        body.pencil-theme .icon-btn { 
-            border: 2px solid var(--card-border); 
-            border-radius: 48% 52% 45% 55% / 55% 45% 52% 48%; 
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.15);
-            background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px);
-        }
+        body.pencil-theme .icon-btn { border: 2px solid var(--card-border); border-radius: 48% 52% 45% 55% / 55% 45% 52% 48%; box-shadow: 2px 2px 0px rgba(0,0,0,0.15); background-image: repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 3px); }
 
         .main-content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; padding-top: 80px; overflow-y: auto; }
-        
-        .weather-card { 
-            background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid var(--card-border); 
-            border-radius: var(--card-radius); padding: 30px 40px; width: 100%; max-width: 350px; 
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); text-align: center; transition: all 0.3s ease; position: relative;
-        }
-        
-        body.pencil-theme .weather-card { 
-            border: 2px solid var(--card-border); 
-            box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.15), -1px -1px 0px rgba(0,0,0,0.05);
-            background-image: 
-                repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px),
-                repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(0,0,0,0.02) 5px, rgba(0,0,0,0.02) 6px);
-        }
+        .weather-card { background: var(--card-bg); backdrop-filter: blur(15px); border: 1px solid var(--card-border); border-radius: var(--card-radius); padding: 30px 40px; width: 100%; max-width: 350px; box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); text-align: center; transition: all 0.3s ease; position: relative; }
+        body.pencil-theme .weather-card { border: 2px solid var(--card-border); box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.15), -1px -1px 0px rgba(0,0,0,0.05); background-image: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px), repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(0,0,0,0.02) 5px, rgba(0,0,0,0.02) 6px); }
 
-        body.pencil-theme .weather-card::after {
-            content: '';
-            position: absolute;
-            top: 4px; left: -4px; right: -3px; bottom: -5px;
-            border: 1px solid var(--card-border);
-            border-radius: 15px 255px 15px 225px / 225px 15px 255px 15px; 
-            opacity: 0.6;
-            pointer-events: none;
-            transform: rotate(0.5deg);
-        }
+        body.pencil-theme .weather-card::after { content: ''; position: absolute; top: 4px; left: -4px; right: -3px; bottom: -5px; border: 1px solid var(--card-border); border-radius: 15px 255px 15px 225px / 225px 15px 255px 15px; opacity: 0.6; pointer-events: none; transform: rotate(0.5deg); }
 
-        .card-loc-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 16px;
-            color: var(--icon-color);
-            z-index: 5;
-        }
-        .card-loc-btn:active { background: rgba(128, 128, 128, 0.3); }
-        
-        body.pencil-theme .card-loc-btn {
-            border: 2px dashed var(--card-border);
-            background: transparent;
-            border-radius: 50% 45% 55% 48% / 45% 50% 48% 55%;
-            box-shadow: 1px 1px 0px rgba(0,0,0,0.1);
-        }
+        .card-loc-btn, .card-help-btn { position: absolute; top: 15px; width: 35px; height: 35px; border-radius: 50%; background: var(--card-bg); border: 1px solid var(--card-border); display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s; color: var(--icon-color); z-index: 5; }
+        .card-loc-btn { right: 15px; font-size: 16px; }
+        .card-help-btn { left: 15px; font-size: 18px; font-weight: bold; }
+        .card-loc-btn:active, .card-help-btn:active { background: rgba(128, 128, 128, 0.3); }
+        body.pencil-theme .card-loc-btn, body.pencil-theme .card-help-btn { border: 2px dashed var(--card-border); background: transparent; border-radius: 50% 45% 55% 48% / 45% 50% 48% 55%; box-shadow: 1px 1px 0px rgba(0,0,0,0.1); }
 
         .location { font-size: 14px; text-transform: capitalize; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 20px; }
         body.pencil-theme .location { font-size: 24px; font-weight: bold; letter-spacing: 0; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); }
@@ -169,32 +102,15 @@
         .forecast-scroll::-webkit-scrollbar { display: none; }
         
         .forecast-item { flex: 0 0 auto; width: 75px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 12px 0; text-align: center; scroll-snap-align: start; transition: transform 0.1s; cursor: pointer; position: relative; }
-        
-        body.pencil-theme .forecast-item { 
-            border: 1.5px solid var(--card-border); 
-            border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px; 
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
-            background: transparent;
-            background-image: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px);
-        }
-        body.pencil-theme .forecast-item::after {
-            content: '';
-            position: absolute; top: -1px; left: 1px; right: -2px; bottom: 1px;
-            border: 1px solid var(--card-border);
-            border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
-            opacity: 0.5; pointer-events: none;
-            transform: rotate(-0.5deg);
-        }
+        body.pencil-theme .forecast-item { border: 1.5px solid var(--card-border); border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px; box-shadow: 2px 2px 0px rgba(0,0,0,0.1); background: transparent; background-image: repeating-linear-gradient(45deg, transparent, transparent 3px, rgba(0,0,0,0.02) 3px, rgba(0,0,0,0.02) 4px); }
+        body.pencil-theme .forecast-item::after { content: ''; position: absolute; top: -1px; left: 1px; right: -2px; bottom: 1px; border: 1px solid var(--card-border); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; opacity: 0.5; pointer-events: none; transform: rotate(-0.5deg); }
         
         .fc-day { font-size: 12px; color: var(--text-muted); text-transform: capitalize; margin-bottom: 2px; }
         body.pencil-theme .fc-day { font-size: 18px; }
-        
         .fc-date { font-size: 14px; font-weight: bold; margin-bottom: 6px; }
         body.pencil-theme .fc-date { font-size: 20px; }
-        
         .fc-icon { font-size: 24px; margin-bottom: 6px; }
         body.pencil-theme .fc-icon { font-size: 30px; }
-        
         .fc-temp { font-size: 16px; font-weight: bold; }
         body.pencil-theme .fc-temp { font-size: 22px; }
 
@@ -217,7 +133,6 @@
         .search-results { display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; padding-right: 5px; }
         .search-result-item { background: var(--card-bg); border: 1px solid var(--card-border); padding: 12px; border-radius: 10px; cursor: pointer; font-size: 14px; }
         body.pencil-theme .search-result-item { font-size: 22px; border-width: 1.5px; border-radius: 10px 100px 10px 100px / 100px 10px 100px 10px; }
-        
         .search-result-item .country { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
         body.pencil-theme .search-result-item .country { font-size: 18px; }
 
@@ -227,10 +142,8 @@
         
         .theme-toggle-btn { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-color); padding: 15px; border-radius: 12px; text-align: left; cursor: pointer; width: 100%; display: flex; flex-direction: column; }
         body.pencil-theme .theme-toggle-btn { border-width: 2px; border-radius: 5px 20px 5px 20px / 20px 5px 20px 5px; }
-        
         .theme-toggle-btn .title { font-weight: bold; font-size: 16px; margin-bottom: 5px; }
         body.pencil-theme .theme-toggle-btn .title { font-size: 24px; }
-        
         .theme-toggle-btn .subtitle { font-size: 12px; color: var(--text-muted); }
         body.pencil-theme .theme-toggle-btn .subtitle { font-size: 18px; }
         
@@ -240,13 +153,10 @@
         .theme-item { background: var(--card-bg); padding: 15px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border: 1px solid transparent; }
         body.pencil-theme .theme-item { border: 2px solid transparent; }
         body.pencil-theme .theme-item.selected { border-color: var(--text-color); }
-        
         .theme-item .text .title { font-size: 16px; font-weight: 500; color: var(--text-color); }
         body.pencil-theme .theme-item .text .title { font-size: 24px; }
-        
         .theme-item .text .subtitle { font-size: 12px; color: var(--text-muted); }
         body.pencil-theme .theme-item .text .subtitle { font-size: 18px; }
-        
         .theme-item .check { color: var(--green); font-size: 24px; font-weight: bold; visibility: hidden; }
         .theme-item.selected .check { visibility: visible; }
         .loading-text { text-align: center; color: var(--text-muted); font-size: 14px; margin-top: 10px; }
@@ -255,10 +165,8 @@
         .detail-grid { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
         .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--card-bg); border-radius: 10px; border: 1px solid var(--card-border); }
         body.pencil-theme .detail-row { border-width: 1.5px; font-size: 22px; border-style: dashed; }
-        
         .detail-row span { color: var(--text-muted); font-size: 14px; }
         body.pencil-theme .detail-row span { font-size: 20px; }
-        
         .detail-row b { color: var(--text-color); font-size: 16px; }
         body.pencil-theme .detail-row b { font-size: 24px; }
 
@@ -266,13 +174,19 @@
         .hourly-scroll::-webkit-scrollbar { display: none; }
         .hourly-item { flex: 0 0 auto; width: 60px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 8px 0; text-align: center; }
         body.pencil-theme .hourly-item { border-width: 1.5px; border-radius: 10px 50px 10px 50px / 50px 10px 50px 10px; border-style: solid; }
-        
         .hourly-time { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
         body.pencil-theme .hourly-time { font-size: 18px; }
-        
         .hourly-icon { font-size: 18px; margin-bottom: 4px; }
         .hourly-temp { font-size: 13px; font-weight: bold; }
         body.pencil-theme .hourly-temp { font-size: 20px; }
+
+        .feedback-btn { flex: 1; padding: 12px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; transition: transform 0.1s; }
+        .feedback-btn:active { transform: scale(0.95); }
+        .feedback-btn.yes { background-color: #00ff00; color: #000; }
+        .feedback-btn.no { background-color: #ff3333; color: #fff; }
+        body.pencil-theme .feedback-btn { font-size: 26px; border: 2px solid var(--card-border); box-shadow: 2px 2px 0px rgba(0,0,0,0.1); border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px; }
+        body.pencil-theme .feedback-btn.yes { background-color: #b5e48c; color: #2c2c2c; border-color: #4a4a4a; }
+        body.pencil-theme .feedback-btn.no { background-color: #f4a261; color: #2c2c2c; border-color: #4a4a4a; }
     </style>
 </head>
 <body>
@@ -290,6 +204,7 @@
 
     <div class="main-content">
         <div class="weather-card">
+            <div class="card-help-btn" onclick="openFeedback()">?</div>
             <div class="card-loc-btn" onclick="getUserLocation()">📳</div>
             
             <div class="location" id="currentLocation">...</div>
@@ -343,6 +258,22 @@
             </div>
             <input type="text" id="searchInput" class="search-input" placeholder="..." oninput="handleSearchInput()">
             <div class="search-results" id="searchResults"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="feedbackModal" onclick="closeFeedback(event)">
+        <div class="settings-card" onclick="event.stopPropagation()">
+            <div class="card-header">
+                <h2 data-i18n="feedback_title">Обратная связь</h2>
+                <button class="close-btn" onclick="closeFeedback(event)">X</button>
+            </div>
+            <div style="text-align: center; margin: 15px 0; font-size: 20px; font-weight: 500;" data-i18n="feedback_question">
+                Верный ли прогноз?
+            </div>
+            <div style="display: flex; gap: 15px;">
+                <button class="feedback-btn no" onclick="submitFeedback(false)" data-i18n="no">Нет</button>
+                <button class="feedback-btn yes" onclick="submitFeedback(true)" data-i18n="yes">Да</button>
+            </div>
         </div>
     </div>
 
@@ -404,8 +335,6 @@
     </div>
 
     <script>
-        const WEATHER_API_KEY = 'ba7bfb2a04f042ab98194932260311'; 
-
         const i18n = {
             ru: {
                 humidity: "Влажность", wind: "Ветер", retry: "Повторить", forecast_title: "Прогноз на дни (нажмите)",
@@ -414,7 +343,9 @@
                 theme_light: "Белая тема", theme_dark: "Черная тема", theme_pencil: "Карандашный скетч", theme_system: "Системная тема",
                 weather_settings: "Настройки погоды", weather_sub: "настройки погоды", wind_unit: "Измерение силы ветра", wind_sub: "настройки единицы",
                 temp_unit: "Единицы температуры", temp_sub: "настройки единицы", languages: "Языки", lang_sub: "настройки языков", system_lang: "Системный",
-                m_s: "м/с", km_h: "км/ч", mph: "миль/ч", mm: "мм", today: "Сегодня"
+                m_s: "м/с", km_h: "км/ч", mph: "миль/ч", mm: "мм", today: "Сегодня",
+                feedback_title: "Обратная связь", feedback_question: "Верный ли прогноз?", yes: "Да", no: "Нет",
+                thanks_yes: "Отлично! Спасибо за отзыв.", thanks_no: "Спасибо, мы постараемся улучшить прогнозы!"
             },
             en: {
                 humidity: "Humidity", wind: "Wind", retry: "Retry", forecast_title: "Forecast (tap for details)",
@@ -423,7 +354,9 @@
                 theme_light: "Light Theme", theme_dark: "Dark Theme", theme_pencil: "Pencil Sketch", theme_system: "System Theme",
                 weather_settings: "Weather Settings", weather_sub: "weather settings", wind_unit: "Wind Speed Unit", wind_sub: "wind settings",
                 temp_unit: "Temperature Unit", temp_sub: "temp settings", languages: "Languages", lang_sub: "app language settings", system_lang: "System",
-                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Today"
+                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Today",
+                feedback_title: "Feedback", feedback_question: "Is the forecast correct?", yes: "Yes", no: "No",
+                thanks_yes: "Great! Thanks for the feedback.", thanks_no: "Thanks, we will try to improve!"
             },
             es: {
                 humidity: "Humedad", wind: "Viento", retry: "Reintentar", forecast_title: "Pronóstico (toca para detalles)",
@@ -432,7 +365,9 @@
                 theme_light: "Tema Claro", theme_dark: "Tema Oscuro", theme_pencil: "Lápiz", theme_system: "Tema Sistema",
                 weather_settings: "Ajustes del Clima", weather_sub: "ajustes del clima", wind_unit: "Unidad de Viento", wind_sub: "ajustes de viento",
                 temp_unit: "Unidad de Temperatura", temp_sub: "ajustes de temp", languages: "Idiomas", lang_sub: "idioma de la app", system_lang: "Sistema",
-                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Hoy"
+                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Hoy",
+                feedback_title: "Comentarios", feedback_question: "¿Es correcto el pronóstico?", yes: "Sí", no: "No",
+                thanks_yes: "¡Genial! Gracias por los comentarios.", thanks_no: "¡Gracias, intentaremos mejorar!"
             },
             de: {
                 humidity: "Luftfeuchtigkeit", wind: "Wind", retry: "Wiederholen", forecast_title: "Vorhersage (tippen für Details)",
@@ -441,7 +376,9 @@
                 theme_light: "Helles Design", theme_dark: "Dunkles Design", theme_pencil: "Bleistift", theme_system: "System-Design",
                 weather_settings: "Wetter-Einstellungen", weather_sub: "Wetter-Einstellungen", wind_unit: "Windgeschwindigkeit", wind_sub: "Wind-Einstellungen",
                 temp_unit: "Temperatureinheit", temp_sub: "Temp-Einstellungen", languages: "Sprachen", lang_sub: "Sprache der App", system_lang: "System",
-                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Heute"
+                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Heute",
+                feedback_title: "Feedback", feedback_question: "Ist die Vorhersage korrekt?", yes: "Ja", no: "Nein",
+                thanks_yes: "Super! Danke für das Feedback.", thanks_no: "Danke, wir versuchen uns zu verbessern!"
             },
             fr: {
                 humidity: "Humidité", wind: "Vent", retry: "Réessayer", forecast_title: "Prévisions (toucher pour détails)",
@@ -450,7 +387,9 @@
                 theme_light: "Thème Clair", theme_dark: "Thème Sombre", theme_pencil: "Crayon", theme_system: "Thème Système",
                 weather_settings: "Paramètres Météo", weather_sub: "paramètres météo", wind_unit: "Unité de vent", wind_sub: "paramètres de vent",
                 temp_unit: "Unité de température", temp_sub: "paramètres de temp", languages: "Langues", lang_sub: "langue de l'app", system_lang: "Système",
-                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Aujourd'hui"
+                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "Aujourd'hui",
+                feedback_title: "Commentaires", feedback_question: "La prévision est-elle correcte ?", yes: "Oui", no: "Non",
+                thanks_yes: "Génial ! Merci pour votre retour.", thanks_no: "Merci, nous essaierons de nous améliorer !"
             },
             zh: {
                 humidity: "湿度", wind: "风速", retry: "重试", forecast_title: "未来预报 (点击详情)",
@@ -459,7 +398,9 @@
                 theme_light: "浅色主题", theme_dark: "深色主题", theme_pencil: "铅笔素描", theme_system: "系统主题",
                 weather_settings: "天气设置", weather_sub: "天气设置", wind_unit: "风速单位", wind_sub: "风速设置",
                 temp_unit: "温度单位", temp_sub: "温度设置", languages: "语言", lang_sub: "应用语言设置", system_lang: "系统",
-                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "今天"
+                m_s: "m/s", km_h: "km/h", mph: "mph", mm: "mm", today: "今天",
+                feedback_title: "反馈", feedback_question: "预报准确吗？", yes: "是的", no: "不是",
+                thanks_yes: "太好了！感谢您的反馈。", thanks_no: "谢谢，我们会努力改进！"
             }
         };
 
@@ -474,6 +415,14 @@
         let currentLon = 37.6173;
         let currentCity = "Москва";
 
+        function openFeedback() { document.getElementById('feedbackModal').classList.add('active'); }
+        function closeFeedback(event) { if (event) event.stopPropagation(); document.getElementById('feedbackModal').classList.remove('active'); }
+        function submitFeedback(isCorrect) {
+            const lang = currentLang === 'system' ? sysLang : currentLang;
+            alert(isCorrect ? i18n[lang].thanks_yes : i18n[lang].thanks_no);
+            closeFeedback();
+        }
+
         function getUserLocation() {
             if (navigator.geolocation) {
                 document.getElementById('currentLocation').innerText = 'Определение...';
@@ -483,28 +432,20 @@
                 
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
-                        const lat = position.coords.latitude;
-                        const lon = position.coords.longitude;
-                        currentLat = lat;
-                        currentLon = lon;
+                        currentLat = position.coords.latitude;
+                        currentLon = position.coords.longitude;
                         currentCity = "Мое местоположение";
-                        fetchWeather(lat, lon, "Мое местоположение");
+                        fetchWeather(currentLat, currentLon, "Мое местоположение");
                     },
                     (error) => {
                         console.error("Ошибка геолокации:", error);
                         alert("Не удалось определить местоположение. Разрешите доступ к GPS в настройках приложения.");
-                        if (lastWeatherData) {
-                            renderWeatherDisplay();
-                            document.getElementById('currentLocation').innerText = currentCity;
-                        } else {
-                            fetchWeather(55.7558, 37.6173, "Москва");
-                        }
+                        if (lastWeatherData) { renderWeatherDisplay(); document.getElementById('currentLocation').innerText = currentCity; } 
+                        else { fetchWeather(55.7558, 37.6173, "Москва"); }
                     },
                     { timeout: 10000, maximumAge: 60000 }
                 );
-            } else {
-                alert("Ваш браузер не поддерживает геолокацию.");
-            }
+            } else { alert("Ваш браузер не поддерживает геолокацию."); }
         }
 
         function updateUILanguage() {
@@ -516,16 +457,11 @@
                 if (i18n[lang] && i18n[lang][key]) el.innerText = i18n[lang][key];
             });
             
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) searchInput.placeholder = lang === 'ru' ? 'Введите город...' : 'Enter city...';
-            
-            const wl = document.getElementById('windUnitLabel');
-            if (wl) wl.innerText = i18n[lang][currentWindUnit === 'm/s' ? 'm_s' : (currentWindUnit === 'km/h' ? 'km_h' : 'mph')];
-            
-            const tl = document.getElementById('tempUnitLabel');
-            if (tl) tl.innerText = currentTempUnit === 'C' ? '°C' : '°F';
+            document.getElementById('searchInput').placeholder = lang === 'ru' ? 'Введите город...' : 'Enter city...';
+            document.getElementById('windUnitLabel').innerText = i18n[lang][currentWindUnit === 'm/s' ? 'm_s' : (currentWindUnit === 'km/h' ? 'km_h' : 'mph')];
+            document.getElementById('tempUnitLabel').innerText = currentTempUnit === 'C' ? '°C' : '°F';
 
-            if (lastWeatherData) renderWeatherDisplay();
+            if (lastWeatherData) renderWeatherDisplay(lastWeatherData);
         }
 
         function changeLang(langCode) {
@@ -533,10 +469,7 @@
             document.querySelectorAll('#langList .theme-item').forEach(el => el.classList.remove('selected'));
             document.getElementById('lang-' + langCode).classList.add('selected');
             updateUILanguage();
-            
-            if (currentLat && currentLon) {
-                fetchWeather(currentLat, currentLon, currentCity);
-            }
+            if (currentLat && currentLon) fetchWeather(currentLat, currentLon, currentCity);
         }
 
         function formatTemp(celsius) {
@@ -549,7 +482,6 @@
             if (mps === undefined || mps === null) return '--';
             const lang = currentLang === 'system' ? sysLang : currentLang;
             const unitText = i18n[lang][currentWindUnit === 'm/s' ? 'm_s' : (currentWindUnit === 'km/h' ? 'km_h' : 'mph')];
-            
             if (currentWindUnit === 'm/s') return `${Math.round(mps)} ${unitText}`;
             if (currentWindUnit === 'km/h') return `${Math.round(mps * 3.6)} ${unitText}`;
             return `${Math.round(mps * 2.23694)} ${unitText}`;
@@ -567,17 +499,40 @@
             updateUILanguage();
         }
 
-        function getWeatherIcon(code, isDay) {
-            const c = parseInt(code);
-            if (c === 1000) return isDay ? '☀️' : '🌙'; 
-            if (c === 1003) return isDay ? '🌤️' : '☁️'; 
-            if (c === 1006 || c === 1009) return '☁️'; 
-            if (c === 1030 || c === 1135 || c === 1147) return '🌫️'; 
-            if ([1063, 1150, 1153, 1168, 1171, 1180, 1183, 1186, 1189, 1192, 1195, 1240, 1243, 1246].includes(c)) return '🌧️';
-            if ([1066, 1069, 1114, 1117, 1204, 1207, 1210, 1213, 1216, 1219, 1222, 1225, 1237, 1249, 1252, 1255, 1258, 1261, 1264].includes(c)) return '🌨️';
-            if ([1072, 1198, 1201].includes(c)) return '🌧️'; 
-            if ([1087, 1273, 1276, 1279, 1282].includes(c)) return '⛈️'; 
+        // ПЕРЕВОД ТЕКСТА ПОГОДЫ (wttr.in отдает на английском, если нет перевода)
+        function getWeatherIcon(desc) {
+            if (!desc) return '☁️';
+            const d = desc.toLowerCase();
+            if (d.includes('sunny') || d.includes('clear')) return '☀️';
+            if (d.includes('partly cloudy')) return '🌤️';
+            if (d.includes('cloudy') || d.includes('overcast')) return '☁️';
+            if (d.includes('mist') || d.includes('fog')) return '🌫️';
+            if (d.includes('light rain') || d.includes('drizzle')) return '🌦️';
+            if (d.includes('heavy rain') || d.includes('rain')) return '🌧️';
+            if (d.includes('snow') || d.includes('blizzard')) return '🌨️';
+            if (d.includes('thunder') || d.includes('storm')) return '⛈️';
             return '☁️';
+        }
+
+        // ПЕРЕВОД ОПИСАНИЯ
+        function translateDesc(desc) {
+            const lang = currentLang === 'system' ? sysLang : currentLang;
+            if (lang === 'ru') {
+                // Если wttr.in не перевел, делаем базовый перевод
+                const d = desc.toLowerCase();
+                if (d.includes('sunny')) return 'Солнечно';
+                if (d.includes('clear')) return 'Ясно';
+                if (d.includes('partly cloudy')) return 'Переменная облачность';
+                if (d.includes('cloudy')) return 'Облачно';
+                if (d.includes('overcast')) return 'Пасмурно';
+                if (d.includes('mist') || d.includes('fog')) return 'Туман';
+                if (d.includes('light rain')) return 'Небольшой дождь';
+                if (d.includes('heavy rain')) return 'Сильный дождь';
+                if (d.includes('rain')) return 'Дождь';
+                if (d.includes('snow')) return 'Снег';
+                if (d.includes('thunder')) return 'Гроза';
+            }
+            return desc;
         }
 
         let selectedTheme = null;
@@ -612,4 +567,194 @@
             resultsContainer.innerHTML = '<div class="loading-text">...</div>';
 
             searchTimeout = setTimeout(() => {
-                fetch(`https://api.weatherapi.com/v1/search.json?key=${WE
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&accept-language=${lang}`, {
+                    headers: { 'User-Agent': 'MeteorawaApp/1.0' }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    resultsContainer.innerHTML = '';
+                    if (!data || data.length === 0) { resultsContainer.innerHTML = '<div class="loading-text">404</div>'; return; }
+                    
+                    data.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'search-result-item';
+                        const parts = item.display_name.split(',');
+                        let cityName = parts[0];
+                        if (cityName.toLowerCase().includes('область')) cityName = parts[1] || parts[0];
+                        
+                        div.innerHTML = `<div class="title">${cityName}</div><div class="country">${parts.slice(1).join(',').trim()}</div>`;
+                        div.onclick = () => { 
+                            closeSearch(); 
+                            currentLat = item.lat; currentLon = item.lon; currentCity = cityName;
+                            fetchWeather(currentLat, currentLon, cityName); 
+                        };
+                        resultsContainer.appendChild(div);
+                    });
+                })
+                .catch(err => { resultsContainer.innerHTML = `<div class="loading-text" style="color:var(--red)">Error</div>`; });
+            }, 600);
+        }
+
+        function renderWeatherDisplay(data) {
+            try {
+                if (!data || !data.current_condition || !data.current_condition[0]) throw new Error("No data");
+                const current = data.current_condition[0];
+                
+                const lang = currentLang === 'system' ? sysLang : currentLang;
+                const locale = lang === 'zh' ? 'zh-CN' : (lang === 'ru' ? 'ru-RU' : lang);
+
+                // Текущая погода
+                document.getElementById('mainTemp').innerText = formatTemp(parseFloat(current.temp_C));
+                document.getElementById('humidity').innerText = `${current.humidity}%`;
+                document.getElementById('windSpeed').innerText = formatWind(parseFloat(current.windspeedKmph) / 3.6);
+                
+                const descEn = current.weatherDesc[0].value;
+                const descLoc = current.lang_ru ? current.lang_ru[0].value : descEn; // если есть русский, берем его
+
+                document.getElementById('weatherIcon').innerText = getWeatherIcon(descEn);
+                document.getElementById('weatherDesc').innerText = translateDesc(descLoc);
+
+                // Прогноз по дням
+                const forecastScroll = document.getElementById('forecastScroll');
+                forecastScroll.innerHTML = ''; 
+                
+                const weatherDays = data.weather;
+
+                for (let i = 0; i < weatherDays.length; i++) {
+                    const day = weatherDays[i];
+                    const dateObj = new Date(day.date);
+                    
+                    const dayName = i === 0 ? i18n[lang].today : dateObj.toLocaleDateString(locale, { weekday: 'short' });
+                    const dayNum = dateObj.toLocaleDateString(locale, { day: 'numeric', month: 'short' });
+                    
+                    // Берем иконку полудня (если есть) или первую доступную
+                    const noonHour = day.hourly.find(h => h.time === "1200") || day.hourly[0];
+                    const infoIcon = getWeatherIcon(noonHour.weatherDesc[0].value);
+
+                    const div = document.createElement('div');
+                    div.className = 'forecast-item';
+                    div.onclick = () => showDailyDetail(i, day); 
+                    div.innerHTML = `
+                        <div class="fc-day">${dayName}</div>
+                        <div class="fc-date">${dayNum}</div>
+                        <div class="fc-icon">${infoIcon}</div>
+                        <div class="fc-temp">${formatTemp(parseFloat(day.maxtempC))}</div>
+                    `;
+                    forecastScroll.appendChild(div);
+                }
+            } catch (e) {
+                console.error("Render error:", e);
+                document.getElementById('weatherDesc').innerText = "Сбой: " + e.message;
+            }
+        }
+
+        async function fetchWeather(lat, lon, cityName) {
+            document.getElementById('currentLocation').innerText = cityName;
+            document.getElementById('mainTemp').innerText = '...';
+            document.getElementById('weatherDesc').innerText = '...';
+            document.getElementById('weatherIcon').innerText = '⏳';
+            document.getElementById('forecastScroll').innerHTML = '<div class="loading-text" style="width:100%; text-align:center; padding: 20px;">...</div>';
+            document.getElementById('retryBtn').style.display = 'none';
+
+            const lang = currentLang === 'system' ? sysLang : currentLang;
+
+            try {
+                // Используем wttr.in
+                const res = await fetch(`https://wttr.in/${lat},${lon}?format=j1&lang=${lang}`);
+                
+                if (!res.ok) throw new Error("Ошибка сервера wttr.in");
+
+                lastWeatherData = await res.json();
+                renderWeatherDisplay(lastWeatherData);
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('mainTemp').innerText = '--°C';
+                document.getElementById('weatherDesc').innerText = "Ошибка"; 
+                document.getElementById('weatherIcon').innerText = '⚠️';
+                document.getElementById('retryBtn').style.display = 'block';
+                document.getElementById('forecastScroll').innerHTML = `<div class="loading-text" style="color:var(--red)">Проверьте интернет</div>`;
+            }
+        }
+
+        function retryFetch() {
+            fetchWeather(currentLat, currentLon, currentCity);
+        }
+
+        function showDailyDetail(index, dayData) {
+            const noonHour = dayData.hourly.find(h => h.time === "1200") || dayData.hourly[0];
+            const descEn = noonHour.weatherDesc[0].value;
+            const descLoc = noonHour.lang_ru ? noonHour.lang_ru[0].value : descEn;
+            
+            const infoIcon = getWeatherIcon(descEn);
+            const dateObj = new Date(dayData.date);
+            
+            const lang = currentLang === 'system' ? sysLang : currentLang;
+            const locale = lang === 'zh' ? 'zh-CN' : (lang === 'ru' ? 'ru-RU' : lang);
+            const dateString = dateObj.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' });
+
+            const detailTitle = index === 0 
+                ? i18n[lang].today + ", " + dateString 
+                : dateString;
+
+            document.getElementById('detailDate').innerText = detailTitle;
+            document.getElementById('detailIcon').innerText = infoIcon;
+            document.getElementById('detailDesc').innerText = translateDesc(descLoc);
+            document.getElementById('detailMax').innerText = formatTemp(parseFloat(dayData.maxtempC));
+            document.getElementById('detailMin').innerText = formatTemp(parseFloat(dayData.mintempC));
+            
+            const langObj = i18n[lang];
+            document.getElementById('detailPrecip').innerText = `${dayData.hourly[0].precipMM} ${langObj.mm}`;
+
+            const hourlyContainer = document.getElementById('hourlyForecastScroll');
+            hourlyContainer.innerHTML = '';
+
+            // wttr.in отдает почасовку каждые 3 часа (время в формате "0", "300", "600"...)
+            dayData.hourly.forEach((hourData, i) => {
+                if (i % 1 === 0) { // Берем каждый доступный час (их и так 8)
+                    const timeStr = hourData.time.padStart(4, '0');
+                    const hour = timeStr.substring(0, 2);
+                    const minute = timeStr.substring(2, 4);
+                    
+                    const hIcon = getWeatherIcon(hourData.weatherDesc[0].value);
+
+                    const hDiv = document.createElement('div');
+                    hDiv.className = 'hourly-item';
+                    hDiv.innerHTML = `
+                        <div class="hourly-time">${hour}:${minute}</div>
+                        <div class="hourly-icon">${hIcon}</div>
+                        <div class="hourly-temp">${formatTemp(parseFloat(hourData.tempC))}</div>
+                    `;
+                    hourlyContainer.appendChild(hDiv);
+                }
+            });
+
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        function closeDetailModal(event) {
+            if (event) event.stopPropagation();
+            document.getElementById('detailModal').classList.remove('active');
+        }
+
+        window.onload = () => {
+            changeLang('system');
+            fetchWeather(55.7558, 37.6173, "Москва");
+        };
+
+        function checkNetwork() {
+            const start = Date.now();
+            const img = new Image();
+            img.src = "https://www.google.com/favicon.ico?_=" + start;
+            img.onload = () => {
+                const dot = document.getElementById('statusDot');
+                dot.className = "status-dot";
+                if (Date.now() - start > 500) dot.classList.add('yellow');
+            };
+            img.onerror = () => { document.getElementById('statusDot').className = "status-dot red"; };
+        }
+        setInterval(checkNetwork, 3000);
+        checkNetwork();
+    </script>
+</body>
+</html>
